@@ -1,0 +1,13 @@
+package com.olc1.golite.parser;
+
+parser code {:
+:};
+
+terminal DUMMY;
+
+non terminal INICIO;
+
+start with INICIO;
+
+INICIO ::=
+;
