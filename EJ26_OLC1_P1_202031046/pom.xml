@@ -56,6 +56,10 @@
                       <lexDefinition>
                           src/main/resources/jflex/Lexer.flex
                       </lexDefinition>
+
+                      <lexDefinition>
+                          src/main/resources/jflex/LexerCup.flex
+                      </lexDefinition>
                   </lexDefinitions>
 
                   <outputDirectory>

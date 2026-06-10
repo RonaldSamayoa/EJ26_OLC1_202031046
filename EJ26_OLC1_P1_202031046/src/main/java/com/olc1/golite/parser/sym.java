@@ -8,13 +8,33 @@ package com.olc1.golite.parser;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int error = 1;
-  public static final int DUMMY = 2;
+  public static final int CADENA = 5;
+  public static final int PUNTO = 10;
+  public static final int PARENTESIS_IZQ = 11;
+  public static final int PUNTO_COMA = 7;
+  public static final int PRINTLN = 9;
+  public static final int ENTERO = 4;
+  public static final int PARENTESIS_DER = 12;
   public static final int EOF = 0;
+  public static final int VAR = 2;
+  public static final int IGUAL = 6;
+  public static final int error = 1;
+  public static final int FMT = 8;
+  public static final int IDENTIFICADOR = 3;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "DUMMY"
+  "VAR",
+  "IDENTIFICADOR",
+  "ENTERO",
+  "CADENA",
+  "IGUAL",
+  "PUNTO_COMA",
+  "FMT",
+  "PRINTLN",
+  "PUNTO",
+  "PARENTESIS_IZQ",
+  "PARENTESIS_DER"
   };
 }
 

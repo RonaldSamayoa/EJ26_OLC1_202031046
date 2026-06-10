@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 
 import com.olc1.golite.lexer.AnalizadorLexico;
 import com.olc1.golite.lexer.Token;
+import com.olc1.golite.parser.AnalizadorSintactico;
 
 public class MainFrame extends JFrame {
 
@@ -68,6 +69,9 @@ public class MainFrame extends JFrame {
         itemProbar.addActionListener(e -> {
             consola.clear();
             String codigo = editor.getTexto();
+
+            consola.append("==TOKENS==");
+            consola.append("");
             
             AnalizadorLexico analizador = new AnalizadorLexico();
 
@@ -76,6 +80,13 @@ public class MainFrame extends JFrame {
             for (Token token :tokens){
                 consola.append(token.toString());
             }
+
+            consola.append("");
+            consola.append("==SINTACTICO==");
+            consola.append("");
+
+            AnalizadorSintactico sintactico = new AnalizadorSintactico();
+            consola.append(sintactico.analizar(codigo));
         });
     }
 

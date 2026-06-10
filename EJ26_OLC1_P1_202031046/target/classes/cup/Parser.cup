@@ -1,13 +1,65 @@
 package com.olc1.golite.parser;
 
 parser code {:
+    public void syntax_error (java_cup.runtime.Symbol s){
+        System.out.println("Error sintactico en token: " + s.value);
+    }
 :};
 
-terminal DUMMY;
+terminal VAR;
+terminal IDENTIFICADOR;
+terminal ENTERO;
+terminal CADENA;
+
+terminal IGUAL;
+terminal PUNTO_COMA;
+
+terminal FMT;
+terminal PRINTLN;
+terminal PUNTO;
+
+terminal PARENTESIS_IZQ;
+terminal PARENTESIS_DER;
 
 non terminal INICIO;
+non terminal LISTA_SENTENCIAS;
+non terminal SENTENCIA;
+non terminal DECLARACION;
+non terminal ASIGNACION;
+non terminal PRINT;
+non terminal VALOR;
 
 start with INICIO;
 
 INICIO ::=
+    LISTA_SENTENCIAS
 ;
+
+LISTA_SENTENCIAS ::=
+    LISTA_SENTENCIAS SENTENCIA | SENTENCIA
+;
+
+SENTENCIA ::=
+    DECLARACION | ASIGNACION | PRINT
+;
+
+DECLARACION ::=
+    VAR IDENTIFICADOR IGUAL VALOR PUNTO_COMA
+;
+
+ASIGNACION ::=
+    IDENTIFICADOR IGUAL VALOR PUNTO_COMA
+;
+
+PRINT ::=
+    FMT PUNTO PRINTLN
+    PARENTESIS_IZQ
+    VALOR
+    PARENTESIS_DER
+    PUNTO_COMA
+;
+
+VALOR ::=
+    ENTERO | CADENA | IDENTIFICADOR
+;
+
