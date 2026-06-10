@@ -1,5 +1,6 @@
 package com.olc1.golite.ui;
 import java.awt.BorderLayout;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -7,6 +8,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+
+import com.olc1.golite.lexer.AnalizadorLexico;
+import com.olc1.golite.lexer.Token;
 
 public class MainFrame extends JFrame {
 
@@ -62,14 +66,16 @@ public class MainFrame extends JFrame {
         add(split, BorderLayout.CENTER);
 
         itemProbar.addActionListener(e -> {
-            consola.append("PRUEBA DEL PROYECTO");
-            consola.append("");
-            consola.append("Contenido del editor:");
-            consola.append("");
-            consola.append(editor.getTexto());
-            consola.append("");
-            consola.append("Interfaz funcionando correctamente.");
+            consola.clear();
+            String codigo = editor.getTexto();
+            
+            AnalizadorLexico analizador = new AnalizadorLexico();
 
+            List<Token> tokens = analizador.analizar(codigo);
+
+            for (Token token :tokens){
+                consola.append(token.toString());
+            }
         });
     }
 

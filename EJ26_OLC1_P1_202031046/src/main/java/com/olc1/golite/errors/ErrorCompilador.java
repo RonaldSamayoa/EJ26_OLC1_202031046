@@ -22,7 +22,7 @@ public class ErrorCompilador {
         return descripcion;
     }
 
-    public int getlinea(){
+    public int getLinea(){
         return linea;
     }
 

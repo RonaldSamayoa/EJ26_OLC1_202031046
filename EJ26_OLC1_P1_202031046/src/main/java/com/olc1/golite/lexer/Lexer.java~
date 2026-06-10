@@ -740,7 +740,7 @@ public class Lexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { return token(TipoToken.ERROR, yytext());
+            { return token(TipoToken.ERROR, yytext())
             }
           // fall through
           case 26: break;
