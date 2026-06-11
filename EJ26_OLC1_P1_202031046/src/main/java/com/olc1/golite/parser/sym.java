@@ -8,33 +8,75 @@ package com.olc1.golite.parser;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int CADENA = 5;
-  public static final int PUNTO = 10;
-  public static final int PARENTESIS_IZQ = 11;
-  public static final int PUNTO_COMA = 7;
-  public static final int PRINTLN = 9;
-  public static final int ENTERO = 4;
-  public static final int PARENTESIS_DER = 12;
+  public static final int AND = 29;
+  public static final int MENOS = 10;
+  public static final int PUNTO = 24;
+  public static final int MULTIPLICACION = 11;
+  public static final int MENOR = 14;
+  public static final int ELSE = 20;
+  public static final int CADENA = 6;
+  public static final int OR = 30;
+  public static final int FMT = 22;
+  public static final int IGUAL = 7;
+  public static final int DECIMAL = 5;
+  public static final int DIVISION = 12;
+  public static final int MENOR_IGUAL = 16;
+  public static final int NOT = 31;
+  public static final int TRUE = 32;
+  public static final int MAYOR_IGUAL = 15;
+  public static final int IF = 19;
+  public static final int PARENTESIS_IZQ = 25;
+  public static final int PARENTESIS_DER = 26;
+  public static final int IGUAL_IGUAL = 17;
+  public static final int MAYOR = 13;
   public static final int EOF = 0;
-  public static final int VAR = 2;
-  public static final int IGUAL = 6;
+  public static final int PRINTLN = 23;
+  public static final int DIFERENTE = 18;
+  public static final int FALSE = 33;
   public static final int error = 1;
-  public static final int FMT = 8;
   public static final int IDENTIFICADOR = 3;
+  public static final int LLAVE_IZQ = 27;
+  public static final int PUNTO_COMA = 8;
+  public static final int LLAVE_DER = 28;
+  public static final int ENTERO = 4;
+  public static final int FOR = 21;
+  public static final int VAR = 2;
+  public static final int MAS = 9;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
   "VAR",
   "IDENTIFICADOR",
   "ENTERO",
+  "DECIMAL",
   "CADENA",
   "IGUAL",
   "PUNTO_COMA",
+  "MAS",
+  "MENOS",
+  "MULTIPLICACION",
+  "DIVISION",
+  "MAYOR",
+  "MENOR",
+  "MAYOR_IGUAL",
+  "MENOR_IGUAL",
+  "IGUAL_IGUAL",
+  "DIFERENTE",
+  "IF",
+  "ELSE",
+  "FOR",
   "FMT",
   "PRINTLN",
   "PUNTO",
   "PARENTESIS_IZQ",
-  "PARENTESIS_DER"
+  "PARENTESIS_DER",
+  "LLAVE_IZQ",
+  "LLAVE_DER",
+  "AND",
+  "OR",
+  "NOT",
+  "TRUE",
+  "FALSE"
   };
 }
 
