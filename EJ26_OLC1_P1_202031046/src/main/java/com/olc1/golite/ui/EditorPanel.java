@@ -50,4 +50,23 @@ public class EditorPanel extends JScrollPane{
     public void setModificado(boolean modificado){
         this.modificado = modificado;
     }
+
+    public int getLineaActual(){
+        try {
+            int pos = txtEditor.getCaretPosition();
+            return txtEditor.getLineOfOffset(pos)+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    public int getColumnaActual(){
+        try {
+            int pos = txtEditor.getCaretPosition();
+            int linea = txtEditor.getLineOfOffset(pos);
+            return pos - txtEditor.getLineStartOffset(linea)+1;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,6 +25,7 @@ public class MainFrame extends JFrame {
     private JTabbedPane tabbedEditor;
     private ConsolePanel consola;
     private int contadorArchivos = 1;
+    private JLabel lblEstado;
 
     public MainFrame() {
         initComponents();
@@ -46,8 +48,20 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void initComponents() {
+    private void actualizarEstado(){
+        if (lblEstado == null){
+            return;
+        }
 
+        EditorPanel editor = getEditorActual();
+
+        if (editor!=null){
+            lblEstado.setText("Linea:  " + editor.getLineaActual()
+            + "  Columna:  " + editor.getColumnaActual());
+        }
+    }
+
+    private void initComponents() {
         setTitle("GoLite!!!");
         setSize(1200, 800);
         setLocationRelativeTo(null);
@@ -86,6 +100,7 @@ public class MainFrame extends JFrame {
         tabbedEditor = new JTabbedPane();
         EditorPanel editorInicial = new EditorPanel();
         tabbedEditor.addTab("SinTitulo1.glt", editorInicial);
+        editorInicial.gTextArea().addCaretListener(evt -> actualizarEstado());
 
         //PRUEBA EN CONSOLA
         consola = new ConsolePanel();
@@ -95,18 +110,20 @@ public class MainFrame extends JFrame {
         split.setDividerLocation(550);
 
         add(split, BorderLayout.CENTER);
+        lblEstado = new JLabel("Linea: 1  Columna: 1");
+        add(lblEstado, BorderLayout.SOUTH);
+        tabbedEditor.addChangeListener(e -> actualizarEstado());
 
         //ITEMS
         //abrir nueva pestania
         itemNuevo.addActionListener(e -> {
             contadorArchivos++;
             EditorPanel nuevoEditor = new EditorPanel();
-
+            nuevoEditor.gTextArea().addCaretListener(evt -> actualizarEstado());
             tabbedEditor.addTab("SinTitulo" + contadorArchivos + ".glt", nuevoEditor);
 
             tabbedEditor.setSelectedComponent(nuevoEditor);
         });
-
 
         //abrir un documento (en diferente pestania)
         itemAbrir.addActionListener(e-> {
@@ -124,9 +141,9 @@ public class MainFrame extends JFrame {
                     String contenido = Files.readString(archivo.toPath());
                     EditorPanel editor = new EditorPanel();
                     editor.setTexto(contenido);
+                    editor.gTextArea().addCaretListener(evt -> actualizarEstado());
 
                     tabbedEditor.addTab(archivo.getName(),editor);
-
                     tabbedEditor.setSelectedComponent(editor);
 
                 } catch (Exception ex) {
