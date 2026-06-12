@@ -44,8 +44,17 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "else"       {return symbol(sym.ELSE);}
 "for"       {return symbol(sym.FOR);}
 
+"break"      { return symbol(sym.BREAK); }
+"continue"   { return symbol(sym.CONTINUE); }
+
 "true"       {return symbol(sym.TRUE);}
 "false"       {return symbol(sym.FALSE);}
+
+"int"       {return symbol(sym.INT);}
+"float64"       {return symbol(sym.FLOAT64);}
+"string"       {return symbol(sym.STRING);}
+"bool"       {return symbol(sym.BOOL);}
+"rune"          {return symbol(sym.RUNE); }
 
 "&&"       {return symbol(sym.AND);}
 "||"       {return symbol(sym.OR);}
@@ -61,13 +70,22 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "="       {return symbol(sym.IGUAL);}
 
+"+="       {return symbol(sym.MAS_IGUAL);}
+"-="       {return symbol(sym.MENOS_IGUAL);}
+"++"       {return symbol(sym.INCREMENTO);}
+"--"       {return symbol(sym.DECREMENTO);}
+
+"nil"       {return symbol(sym.NIL);}
+
 "+"       {return symbol(sym.MAS);}
 "-"       {return symbol(sym.MENOS);}
 "*"       {return symbol(sym.MULTIPLICACION);}
 "/"       {return symbol(sym.DIVISION);}
+"%"       {return symbol(sym.MODULO);}
 
 ";"       {return symbol(sym.PUNTO_COMA);}
 "."       {return symbol(sym.PUNTO);}
+","       {return symbol(sym.COMA);}
 
 "("       {return symbol(sym.PARENTESIS_IZQ);}
 ")"       {return symbol(sym.PARENTESIS_DER);}
@@ -76,11 +94,18 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "fmt"       {return symbol(sym.FMT);}
 "Println"       {return symbol(sym.PRINTLN);}
+"strconv"       {return symbol(sym.STRCONV);}
+"Atoi"       {return symbol(sym.ATOI);}
+"ParseFloat"       {return symbol(sym.PARSEFLOAT);}
+"reflect"       {return symbol(sym.REFLECT);}
+"TypeOf"       {return symbol(sym.TYPEOF);}
 
 {DECIMAL}              { return symbol(sym.DECIMAL,yytext());}
 {ENTERO}              { return symbol(sym.ENTERO,yytext());}
 
 \"([^\"\\]|\\.)*\"    { return symbol(sym.CADENA, yytext()); }
+
+\'([^\'\\]|\\.)\'    { return symbol(sym.LITERAL_RUNE, yytext()); }
 
 {IDENTIFICADOR}       { return symbol(sym.IDENTIFICADOR, yytext()); }
 

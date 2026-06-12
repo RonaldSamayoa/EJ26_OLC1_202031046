@@ -8,40 +8,61 @@ package com.olc1.golite.parser;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int AND = 29;
-  public static final int MENOS = 10;
-  public static final int PUNTO = 24;
-  public static final int MULTIPLICACION = 11;
-  public static final int MENOR = 14;
-  public static final int ELSE = 20;
-  public static final int CADENA = 6;
-  public static final int OR = 30;
-  public static final int FMT = 22;
-  public static final int IGUAL = 7;
-  public static final int DECIMAL = 5;
-  public static final int DIVISION = 12;
-  public static final int MENOR_IGUAL = 16;
-  public static final int NOT = 31;
-  public static final int TRUE = 32;
-  public static final int MAYOR_IGUAL = 15;
-  public static final int IF = 19;
-  public static final int PARENTESIS_IZQ = 25;
-  public static final int PARENTESIS_DER = 26;
-  public static final int IGUAL_IGUAL = 17;
-  public static final int MAYOR = 13;
-  public static final int EOF = 0;
-  public static final int PRINTLN = 23;
-  public static final int DIFERENTE = 18;
-  public static final int FALSE = 33;
-  public static final int error = 1;
-  public static final int IDENTIFICADOR = 3;
-  public static final int LLAVE_IZQ = 27;
-  public static final int PUNTO_COMA = 8;
-  public static final int LLAVE_DER = 28;
+  public static final int PARENTESIS_IZQ = 41;
+  public static final int REFLECT = 37;
+  public static final int LITERAL_RUNE = 12;
+  public static final int STRCONV = 34;
   public static final int ENTERO = 4;
-  public static final int FOR = 21;
+  public static final int DIFERENTE = 25;
+  public static final int CONTINUE = 51;
+  public static final int INT = 7;
+  public static final int PRINTLN = 33;
+  public static final int FOR = 31;
+  public static final int NOT = 47;
+  public static final int AND = 45;
+  public static final int LLAVE_IZQ = 43;
+  public static final int IDENTIFICADOR = 3;
+  public static final int IGUAL = 13;
+  public static final int PARSEFLOAT = 36;
+  public static final int TYPEOF = 38;
+  public static final int NIL = 28;
+  public static final int OR = 46;
+  public static final int BOOL = 10;
+  public static final int INCREMENTO = 52;
+  public static final int ATOI = 35;
+  public static final int UMENOS = 54;
+  public static final int MAS_IGUAL = 26;
+  public static final int IF = 29;
+  public static final int PUNTO_COMA = 14;
+  public static final int IGUAL_IGUAL = 24;
+  public static final int EOF = 0;
+  public static final int DECIMAL = 5;
+  public static final int PARENTESIS_DER = 42;
+  public static final int TRUE = 48;
+  public static final int DECREMENTO = 53;
+  public static final int error = 1;
+  public static final int COMA = 40;
+  public static final int FLOAT64 = 8;
+  public static final int CADENA = 6;
+  public static final int MODULO = 19;
+  public static final int MENOS = 16;
+  public static final int MENOR = 21;
+  public static final int BREAK = 50;
+  public static final int RUNE = 11;
+  public static final int MAYOR = 20;
+  public static final int ELSE = 30;
+  public static final int LLAVE_DER = 44;
+  public static final int PUNTO = 39;
+  public static final int MAYOR_IGUAL = 22;
+  public static final int STRING = 9;
+  public static final int FMT = 32;
+  public static final int MENOR_IGUAL = 23;
+  public static final int FALSE = 49;
+  public static final int MENOS_IGUAL = 27;
+  public static final int DIVISION = 18;
   public static final int VAR = 2;
-  public static final int MAS = 9;
+  public static final int MULTIPLICACION = 17;
+  public static final int MAS = 15;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -50,24 +71,40 @@ public interface sym {
   "ENTERO",
   "DECIMAL",
   "CADENA",
+  "INT",
+  "FLOAT64",
+  "STRING",
+  "BOOL",
+  "RUNE",
+  "LITERAL_RUNE",
   "IGUAL",
   "PUNTO_COMA",
   "MAS",
   "MENOS",
   "MULTIPLICACION",
   "DIVISION",
+  "MODULO",
   "MAYOR",
   "MENOR",
   "MAYOR_IGUAL",
   "MENOR_IGUAL",
   "IGUAL_IGUAL",
   "DIFERENTE",
+  "MAS_IGUAL",
+  "MENOS_IGUAL",
+  "NIL",
   "IF",
   "ELSE",
   "FOR",
   "FMT",
   "PRINTLN",
+  "STRCONV",
+  "ATOI",
+  "PARSEFLOAT",
+  "REFLECT",
+  "TYPEOF",
   "PUNTO",
+  "COMA",
   "PARENTESIS_IZQ",
   "PARENTESIS_DER",
   "LLAVE_IZQ",
@@ -76,7 +113,12 @@ public interface sym {
   "OR",
   "NOT",
   "TRUE",
-  "FALSE"
+  "FALSE",
+  "BREAK",
+  "CONTINUE",
+  "INCREMENTO",
+  "DECREMENTO",
+  "UMENOS"
   };
 }
 

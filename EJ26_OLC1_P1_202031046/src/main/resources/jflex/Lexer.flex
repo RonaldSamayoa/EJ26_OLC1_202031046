@@ -42,6 +42,7 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "float64"             { return token(TipoToken.FLOAT64, yytext()); }
 "string"              { return token(TipoToken.STRING, yytext()); }
 "bool"                { return token(TipoToken.BOOL, yytext()); }
+"rune"          {return token(TipoToken.RUNE, yytext()); }            
 
 "if"          {return token(TipoToken.IF, yytext()); }            
 "else"        {return token(TipoToken.ELSE, yytext()); }
@@ -92,6 +93,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 {ENTERO}              { return token(TipoToken.ENTERO, yytext()); }
 
 \"([^\"\\]|\\.)*\"    { return token(TipoToken.CADENA, yytext()); }
+
+\'([^\'\\]|\\.)\'    { return token(TipoToken.LITERAL_RUNE, yytext()); }
 
 /*OPERADORES ARITMETICOS */
 "+"                   { return token(TipoToken.MAS, yytext()); }

@@ -8,6 +8,7 @@ public enum TipoToken {
     STRING,
     BOOL,
     NIL,
+    RUNE,
 
     IF,
     ELSE,
@@ -35,6 +36,7 @@ public enum TipoToken {
     ENTERO, 
     DECIMAL,
     CADENA,
+    LITERAL_RUNE,
 
     //operadores aritmeticos
     MAS,
@@ -84,7 +86,4 @@ public enum TipoToken {
     //especiales
     EOF,
     ERROR 
-
-
-
 }
