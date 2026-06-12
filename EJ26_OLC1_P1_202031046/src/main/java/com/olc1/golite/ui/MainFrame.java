@@ -16,12 +16,14 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.olc1.golite.errors.ErrorCompilador;
 import com.olc1.golite.lexer.AnalizadorLexico;
 import com.olc1.golite.lexer.Token;
 import com.olc1.golite.parser.AnalizadorSintactico;
 
 public class MainFrame extends JFrame {
-
+    private List<Token> ultimoReporteTokens;
+    private List<ErrorCompilador> ultimoReporteErrores;
     private JTabbedPane tabbedEditor;
     private ConsolePanel consola;
     private int contadorArchivos = 1;
@@ -72,13 +74,17 @@ public class MainFrame extends JFrame {
         JMenu menuArchivo = new JMenu("Archivo");
         JMenu menuEjecutar = new JMenu("Ejecutar");
         JMenu menuReportes = new JMenu("Reportes");
+        
+        
 
         JMenuItem itemNuevo = new JMenuItem("Nuevo");
         JMenuItem itemAbrir = new JMenuItem("Abrir");
         JMenuItem itemGuardar = new JMenuItem("Guardar");
         JMenuItem itemGuardarComo = new JMenuItem("Guardar Como");
         JMenuItem itemCerrar = new JMenuItem("Cerrar Pestaña");
-
+        JMenuItem itemReporteTokens = new JMenuItem("Reporte de tokens");
+        JMenuItem itemReporteErrores = new JMenuItem("Reporte de errores");
+        
         JMenuItem itemProbar = new JMenuItem("Probar");
 
         //menu de archivo
@@ -89,6 +95,9 @@ public class MainFrame extends JFrame {
         menuArchivo.add(itemCerrar);
         
         menuEjecutar.add(itemProbar);
+
+        menuReportes.add(itemReporteTokens);
+        menuReportes.add(itemReporteErrores);
 
         barra.add(menuArchivo);
         barra.add(menuEjecutar);
@@ -213,6 +222,8 @@ public class MainFrame extends JFrame {
             AnalizadorLexico analizador = new AnalizadorLexico();
 
             List<Token> tokens = analizador.analizar(codigo);
+            ultimoReporteTokens = tokens;
+            ultimoReporteErrores = analizador.getErrores();
 
             for (Token token :tokens){
                 consola.append(token.toString());
@@ -240,6 +251,29 @@ public class MainFrame extends JFrame {
                     }
                 }
             }
-        );  
+        );
+        
+        //REPORTES
+        itemReporteTokens.addActionListener(e -> {
+            System.out.println("CLICK TOKENS");
+            if(ultimoReporteTokens == null){
+                JOptionPane.showMessageDialog(
+                        this,"Primero ejecute un analisis");
+                return;
+            }
+        
+            FrameReporteTokens frame = new FrameReporteTokens(ultimoReporteTokens);
+            frame.setVisible(true);
+        });
+
+        itemReporteErrores.addActionListener(e -> {
+            if(ultimoReporteErrores == null){
+                JOptionPane.showMessageDialog(this, "Primero ejecute un analisis");
+                return;
+            }
+        
+            FrameReporteErrores frame = new FrameReporteErrores(ultimoReporteErrores);
+            frame.setVisible(true);
+        });
     }
 }
