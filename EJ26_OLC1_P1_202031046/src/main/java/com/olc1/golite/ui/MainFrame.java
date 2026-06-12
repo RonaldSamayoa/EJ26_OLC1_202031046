@@ -63,6 +63,18 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private boolean hayCambiosSinGuardar(){
+
+        for(int i = 0; i < tabbedEditor.getTabCount(); i++){
+            EditorPanel editor = (EditorPanel) tabbedEditor.getComponentAt(i);
+    
+            if(editor.isModificado()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initComponents() {
         setTitle("GoLite!!!");
         setSize(1200, 800);
@@ -238,17 +250,37 @@ public class MainFrame extends JFrame {
             ultimoReporteErrores.addAll(sintactico.getErrores());
         });
     
+        //CERRAR PROGRAMA
         addWindowListener(
             new java.awt.event.WindowAdapter() {
         
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
-                    int opcion =JOptionPane.showConfirmDialog(
-                            MainFrame.this, "¿Desea salir?",
-                            "Salir",JOptionPane.YES_NO_OPTION);
+                    if(hayCambiosSinGuardar()){
+                        int opcion = JOptionPane.showConfirmDialog(
+                                MainFrame.this,
+                                "Existen archivos con cambios sin guardar.\n¿Desea salir?",
+                                "Salir", JOptionPane.YES_NO_CANCEL_OPTION
+                            );
         
-                    if (opcion == JOptionPane.YES_OPTION) {
-                        dispose();
+                        if(opcion == JOptionPane.CANCEL_OPTION){
+                            return;
+                        }
+        
+                        if(opcion == JOptionPane.YES_OPTION){
+                            dispose();
+                        }
+        
+                    }else{
+                        int opcion = JOptionPane.showConfirmDialog(
+                                MainFrame.this,
+                                "¿Desea salir?",
+                                "Salir",JOptionPane.YES_NO_OPTION
+                            );
+        
+                        if(opcion == JOptionPane.YES_OPTION){
+                            dispose();
+                        }
                     }
                 }
             }
