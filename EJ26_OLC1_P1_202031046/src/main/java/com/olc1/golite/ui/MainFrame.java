@@ -235,6 +235,7 @@ public class MainFrame extends JFrame {
 
             AnalizadorSintactico sintactico = new AnalizadorSintactico();
             consola.append(sintactico.analizar(codigo));
+            ultimoReporteErrores.addAll(sintactico.getErrores());
         });
     
         addWindowListener(

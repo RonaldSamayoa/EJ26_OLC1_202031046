@@ -1,3 +1,4 @@
+com/olc1/golite/ui/FrameReporteTokens.class
 com/olc1/golite/ui/EditorPanel.class
 com/olc1/golite/ui/MainFrame$1.class
 com/olc1/golite/lexer/Token.class
@@ -6,5 +7,6 @@ com/olc1/golite/lexer/AnalizadorLexico.class
 com/olc1/golite/ui/ConsolePanel.class
 com/olc1/golite/ui/ArchivoTab.class
 com/olc1/golite/lexer/Lexer.class
+com/olc1/golite/ui/FrameReporteErrores.class
 com/olc1/golite/lexer/TipoToken.class
 com/olc1/golite/errors/ErrorCompilador.class

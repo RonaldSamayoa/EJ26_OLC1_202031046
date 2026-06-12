@@ -1,9 +1,27 @@
 package com.olc1.golite.parser;
 
 parser code {:
-    public void syntax_error (java_cup.runtime.Symbol s){
-        System.out.println("Error sintactico en token: " + s.value);
+
+    private java.util.List<com.olc1.golite.errors.ErrorCompilador> errores =
+            new java.util.ArrayList<>();
+
+    public java.util.List<com.olc1.golite.errors.ErrorCompilador> getErrores(){
+        return errores;
     }
+
+    @Override
+    public void syntax_error(java_cup.runtime.Symbol s){
+
+        errores.add(
+            new com.olc1.golite.errors.ErrorCompilador(
+                "Sintactico",
+                "Token inesperado: " + s.value,
+                s.left,
+                s.right
+            )
+        );
+    }
+
 :};
 
 terminal VAR;
@@ -118,6 +136,10 @@ LISTA_SENTENCIAS ::=
 SENTENCIA ::=
     DECLARACION | ASIGNACION | PRINT | IF_SENTENCIA | FOR_SENTENCIA
     |BREAK_SENTENCIA | CONTINUE_SENTENCIA | BLOQUE
+    | error PUNTO_COMA
+        {:
+            System.out.println("Sentencia invalida recuperada");
+        :}
 ;
 
 IF_SENTENCIA ::=
