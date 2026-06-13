@@ -84,6 +84,7 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "%"       {return symbol(sym.MODULO);}
 
 ";"       {return symbol(sym.PUNTO_COMA);}
+":"       { return symbol(sym.DOS_PUNTOS); }
 "."       {return symbol(sym.PUNTO);}
 ","       {return symbol(sym.COMA);}
 

@@ -109,6 +109,7 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 /*PUNTUACION*/
 "."                   { return token(TipoToken.PUNTO, yytext()); }
 ","                   { return token(TipoToken.COMA, yytext()); }
+":"                   { return token(TipoToken.DOS_PUNTOS, yytext()); }
 ";"                   { return token(TipoToken.PUNTO_COMA, yytext()); }
 
 /*AGRUPACION*/

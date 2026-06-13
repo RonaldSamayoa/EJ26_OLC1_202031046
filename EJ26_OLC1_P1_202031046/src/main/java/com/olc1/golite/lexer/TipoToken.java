@@ -65,6 +65,7 @@ public enum TipoToken {
     PUNTO,
     COMA,
     PUNTO_COMA,
+    DOS_PUNTOS,
 
     PARENTESIS_IZQ,
     PARENTESIS_DER,

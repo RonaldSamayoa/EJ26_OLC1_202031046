@@ -20,6 +20,12 @@ parser code {:
                 s.right
             )
         );
+
+        System.out.println(
+            "ERROR -> " + s.value +
+            " linea=" + s.left +
+            " columna=" + s.right
+        );
     }
 
 :};
@@ -39,6 +45,7 @@ terminal LITERAL_RUNE;
 
 terminal IGUAL;
 terminal PUNTO_COMA;
+terminal DOS_PUNTOS;
 terminal MAS;
 terminal MENOS;
 terminal MULTIPLICACION;
@@ -106,6 +113,7 @@ non terminal BREAK_SENTENCIA;
 non terminal CONTINUE_SENTENCIA;
 non terminal FUNCION_EMBEBIDA;
 non terminal TIPO;
+non terminal LISTA_EXPRESIONES;
 
 precedence left OR;
 precedence left AND;
@@ -168,14 +176,17 @@ DECLARACION ::=
 
 ASIGNACION ::=
     IDENTIFICADOR IGUAL EXPRESION PUNTO_COMA
+    | IDENTIFICADOR DOS_PUNTOS IGUAL EXPRESION PUNTO_COMA
     | IDENTIFICADOR MAS_IGUAL EXPRESION PUNTO_COMA
     | IDENTIFICADOR MENOS_IGUAL EXPRESION PUNTO_COMA
+    | IDENTIFICADOR INCREMENTO PUNTO_COMA
+    | IDENTIFICADOR DECREMENTO PUNTO_COMA
 ;
 
 PRINT ::=
     FMT PUNTO PRINTLN
     PARENTESIS_IZQ
-    EXPRESION
+    LISTA_EXPRESIONES
     PARENTESIS_DER
     PUNTO_COMA
 ;
@@ -218,4 +229,9 @@ FUNCION_EMBEBIDA ::=
 
 TIPO ::=
     INT | FLOAT64 | STRING | BOOL | RUNE
+;
+
+LISTA_EXPRESIONES ::=
+      EXPRESION
+    | LISTA_EXPRESIONES COMA EXPRESION
 ;
