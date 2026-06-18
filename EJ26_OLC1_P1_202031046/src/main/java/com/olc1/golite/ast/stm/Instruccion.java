@@ -1,5 +1,7 @@
 package com.olc1.golite.ast.stm;
 
-public class Instruccion {
+import com.olc1.golite.ast.ASTNode;
 
+public abstract class Instruccion extends ASTNode {
+    
 }
