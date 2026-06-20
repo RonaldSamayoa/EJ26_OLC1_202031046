@@ -1,4 +1,25 @@
 package com.olc1.golite.parser;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.olc1.golite.ast.exp.Expresion;
+import com.olc1.golite.ast.exp.Identificador;
+import com.olc1.golite.ast.exp.Literal;
+import com.olc1.golite.ast.exp.OperacionBinaria;
+import com.olc1.golite.ast.exp.OperacionUnaria;
+import com.olc1.golite.ast.exp.FuncionEmbebida;
+
+import com.olc1.golite.ast.stm.Instruccion;
+import com.olc1.golite.ast.stm.Declaracion;
+import com.olc1.golite.ast.stm.Asignacion;
+import com.olc1.golite.ast.stm.Print;
+import com.olc1.golite.ast.stm.Bloque;
+import com.olc1.golite.ast.stm.Break;
+import com.olc1.golite.ast.stm.Continue;
+import com.olc1.golite.ast.stm.If;
+import com.olc1.golite.ast.stm.For;
+import com.olc1.golite.ast.stm.Incremento;
+import com.olc1.golite.ast.stm.Decremento;
 
 parser code {:
 
@@ -98,26 +119,28 @@ terminal DECREMENTO;
 
 terminal UMENOS;
 
-non terminal INICIO;
-non terminal LISTA_SENTENCIAS;
-non terminal SENTENCIA;
-non terminal DECLARACION;
-non terminal ASIGNACION;
-non terminal PRINT;
-non terminal VALOR;
-non terminal EXPRESION;
-non terminal BLOQUE;
-non terminal IF_SENTENCIA;
-non terminal FOR_SENTENCIA;
-non terminal BREAK_SENTENCIA;
-non terminal CONTINUE_SENTENCIA;
-non terminal FUNCION_EMBEBIDA;
-non terminal TIPO;
-non terminal LISTA_EXPRESIONES;
-non terminal PUNTO_COMA_OPCIONAL;
-non terminal FOR_CLASICO;
-non terminal INICIALIZACION_FOR;
-non terminal ACTUALIZACION_FOR;
+non terminal List INICIO;
+non terminal List LISTA_SENTENCIAS;
+non terminal Instruccion SENTENCIA;
+non terminal Declaracion DECLARACION;
+non terminal Asignacion ASIGNACION;
+non terminal Print PRINT;
+non terminal Expresion VALOR;
+non terminal Expresion EXPRESION;
+non terminal Bloque BLOQUE;
+non terminal If IF_SENTENCIA;
+non terminal For FOR_SENTENCIA;
+non terminal Break BREAK_SENTENCIA;
+non terminal Continue CONTINUE_SENTENCIA;
+non terminal Incremento INCREMENTO_SENTENCIA;
+non terminal Decremento DECREMENTO_SENTENCIA;
+non terminal FuncionEmbebida FUNCION_EMBEBIDA;
+non terminal Object TIPO;
+non terminal List LISTA_EXPRESIONES;
+non terminal Object PUNTO_COMA_OPCIONAL;
+non terminal For FOR_CLASICO;
+non terminal Instruccion INICIALIZACION_FOR;
+non terminal Instruccion ACTUALIZACION_FOR;
 
 precedence left OR;
 precedence left AND;
@@ -138,107 +161,292 @@ precedence right UMENOS;
 start with INICIO;
 
 INICIO ::=
-    LISTA_SENTENCIAS
+    LISTA_SENTENCIAS:l
+    {:
+        RESULT = l;
+    :}
 ;
 
 LISTA_SENTENCIAS ::=
-    LISTA_SENTENCIAS SENTENCIA | SENTENCIA
+      SENTENCIA:s
+      {:
+          List<Instruccion> lista = new ArrayList<>();
+          lista.add(s);
+          RESULT = lista;
+      :}
+
+    | LISTA_SENTENCIAS:l SENTENCIA:s
+      {:
+          l.add(s);
+          RESULT = l;
+      :}
 ;
 
 SENTENCIA ::=
-    DECLARACION | ASIGNACION | PRINT | IF_SENTENCIA | FOR_SENTENCIA
-    |BREAK_SENTENCIA | CONTINUE_SENTENCIA | BLOQUE
+      DECLARACION:d      {: RESULT = d; :}
+    | ASIGNACION:a       {: RESULT = a; :}
+    | PRINT:p            {: RESULT = p; :}
+    | IF_SENTENCIA:i     {: RESULT = i; :}
+    | FOR_SENTENCIA:f    {: RESULT = f; :}
+    | BREAK_SENTENCIA:b  {: RESULT = b; :}
+    | CONTINUE_SENTENCIA:c {: RESULT = c; :}
+    | BLOQUE:b           {: RESULT = b; :}
+    | INCREMENTO_SENTENCIA:i {: RESULT = i; :}
+    | DECREMENTO_SENTENCIA:d {: RESULT = d; :}
+
     | error PUNTO_COMA
     | error LLAVE_DER
-        {:
-            System.out.println("Sentencia invalida recuperada");
-        :}
+      {:
+          System.out.println("Sentencia invalida recuperada");
+      :}
 ;
 
 IF_SENTENCIA ::=
-    IF EXPRESION BLOQUE
-    | IF EXPRESION BLOQUE
-        ELSE IF_SENTENCIA
-    | IF EXPRESION BLOQUE
-        ELSE BLOQUE
+      IF EXPRESION:c BLOQUE:t
+      {:
+          RESULT = new If(c, t, null);
+      :}
+
+    | IF EXPRESION:c BLOQUE:t
+      ELSE BLOQUE:e
+      {:
+          RESULT = new If(c, t, e);
+      :}
+
+    | IF EXPRESION:c BLOQUE:t
+      ELSE IF_SENTENCIA:e
+      {:
+          RESULT = new If(c, t, e);
+      :}
 ;
 
 FOR_SENTENCIA ::=
-    FOR EXPRESION BLOQUE
-    | FOR BLOQUE
-    | FOR_CLASICO
+      FOR EXPRESION:c BLOQUE:b
+      {:
+          RESULT = new For(null, c,null, b);
+      :}
+
+    | FOR BLOQUE:b
+      {:
+          RESULT = new For(null,null,null,b);
+      :}
+
+    | FOR_CLASICO:f
+      {:
+          RESULT = f;
+      :}
 ;
 
 BREAK_SENTENCIA ::=
     BREAK PUNTO_COMA_OPCIONAL
+    {: RESULT = new Break(); :}
 ;
 
 CONTINUE_SENTENCIA ::=
     CONTINUE PUNTO_COMA_OPCIONAL
+    {: RESULT = new Continue(); :}
+;
+
+INCREMENTO_SENTENCIA ::=
+    IDENTIFICADOR:id INCREMENTO PUNTO_COMA_OPCIONAL
+    {:
+        RESULT = new Incremento(id.toString());
+    :}
+;
+
+DECREMENTO_SENTENCIA ::=
+    IDENTIFICADOR:id DECREMENTO PUNTO_COMA_OPCIONAL
+    {:
+        RESULT = new Decremento(id.toString());
+    :}
 ;
 
 DECLARACION ::=
-    VAR IDENTIFICADOR IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | VAR IDENTIFICADOR TIPO IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | VAR IDENTIFICADOR TIPO PUNTO_COMA_OPCIONAL
+      VAR IDENTIFICADOR:id IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Declaracion(id.toString(), e);
+      :}
+
+    | VAR IDENTIFICADOR:id TIPO IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Declaracion(id.toString(), e);
+      :}
+
+    | VAR IDENTIFICADOR:id TIPO PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Declaracion( id.toString(), null);
+      :}
 ;
 
 ASIGNACION ::=
-    IDENTIFICADOR IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | IDENTIFICADOR DOS_PUNTOS IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | IDENTIFICADOR MAS_IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | IDENTIFICADOR MENOS_IGUAL EXPRESION PUNTO_COMA_OPCIONAL
-    | IDENTIFICADOR INCREMENTO PUNTO_COMA_OPCIONAL
-    | IDENTIFICADOR DECREMENTO PUNTO_COMA_OPCIONAL
+      IDENTIFICADOR:id IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Asignacion(id.toString(), e);
+      :}
+
+    | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Asignacion(id.toString(), e);
+      :}
+
+    | IDENTIFICADOR:id MAS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Asignacion(id.toString(), e);
+      :}
+
+    | IDENTIFICADOR:id MENOS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Asignacion(id.toString(), e);
+      :}
 ;
 
 PRINT ::=
-    FMT PUNTO PRINTLN
-    PARENTESIS_IZQ
-    LISTA_EXPRESIONES
-    PARENTESIS_DER
-    PUNTO_COMA_OPCIONAL
+      FMT PUNTO PRINTLN
+      PARENTESIS_IZQ
+      LISTA_EXPRESIONES:l
+      PARENTESIS_DER
+      PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Print(l);
+      :}
 
     | FMT PUNTO PRINTLN
       PARENTESIS_IZQ
       PARENTESIS_DER
       PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Print(
+              new ArrayList<Expresion>()
+          );
+      :}
 ;
 
 VALOR ::=
-    ENTERO | DECIMAL |CADENA | IDENTIFICADOR| TRUE | FALSE | NIL
-    | LITERAL_RUNE | FUNCION_EMBEBIDA 
+      ENTERO:e
+      {: RESULT = new Literal(e); :}
+
+    | DECIMAL:d
+      {: RESULT = new Literal(d); :}
+
+    | CADENA:c
+      {: RESULT = new Literal(c); :}
+
+    | IDENTIFICADOR:id
+      {: RESULT = new Identificador(id.toString()); :}
+
+    | TRUE
+      {: RESULT = new Literal(true); :}
+
+    | FALSE
+      {: RESULT = new Literal(false); :}
+
+    | NIL
+      {: RESULT = new Literal(null); :}
+
+    | LITERAL_RUNE:r
+        {: RESULT = new Literal(r); :}
+
+    | FUNCION_EMBEBIDA:f
+        {: RESULT = (Expresion) f; :}
 ;
 
 EXPRESION ::=
-    VALOR 
-    |PARENTESIS_IZQ EXPRESION PARENTESIS_DER
-    | EXPRESION MAS EXPRESION
-    |EXPRESION MENOS EXPRESION
-    | EXPRESION MULTIPLICACION EXPRESION
-    | EXPRESION DIVISION EXPRESION
-    | EXPRESION MODULO EXPRESION
-    | EXPRESION MAYOR EXPRESION
-    | EXPRESION MENOR EXPRESION
-    | EXPRESION MAYOR_IGUAL EXPRESION
-    | EXPRESION MENOR_IGUAL EXPRESION
-    | EXPRESION IGUAL_IGUAL EXPRESION
-    | EXPRESION DIFERENTE EXPRESION
-    | EXPRESION AND EXPRESION
-    | EXPRESION OR EXPRESION
-    | NOT EXPRESION
-    | MENOS EXPRESION %prec UMENOS
+      VALOR:v
+      {: RESULT = v; :}
+
+    | PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
+      {: RESULT = e; :}
+
+    | EXPRESION:i MAS EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"+",d); :}
+
+    | EXPRESION:i MENOS EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"-",d); :}
+
+    | EXPRESION:i MULTIPLICACION EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"*",d); :}
+
+    | EXPRESION:i DIVISION EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"/",d); :}
+
+    | EXPRESION:i MODULO EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"%",d); :}
+
+    | EXPRESION:i MAYOR EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,">",d); :}
+
+    | EXPRESION:i MENOR EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"<",d); :}
+
+    | EXPRESION:i MAYOR_IGUAL EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,">=",d); :}
+
+    | EXPRESION:i MENOR_IGUAL EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"<=",d); :}
+
+    | EXPRESION:i IGUAL_IGUAL EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"==",d); :}
+
+    | EXPRESION:i DIFERENTE EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"!=",d); :}
+
+    | EXPRESION:i AND EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"&&",d); :}
+
+    | EXPRESION:i OR EXPRESION:d
+      {: RESULT = new OperacionBinaria(i,"||",d); :}
+
+    | NOT EXPRESION:e
+      {: RESULT = new OperacionUnaria("!",e); :}
+
+    | MENOS EXPRESION:e
+        {:
+            RESULT = new OperacionUnaria("-", e);
+        :}
 ;
 
 BLOQUE ::=
       LLAVE_IZQ LLAVE_DER
-    | LLAVE_IZQ LISTA_SENTENCIAS LLAVE_DER
+      {:
+          RESULT = new Bloque(
+              new ArrayList<Instruccion>()
+          );
+      :}
+
+    | LLAVE_IZQ LISTA_SENTENCIAS:l LLAVE_DER
+      {:
+          RESULT = new Bloque(l);
+      :}
 ;
 
 FUNCION_EMBEBIDA ::=
-    STRCONV PUNTO ATOI PARENTESIS_IZQ EXPRESION PARENTESIS_DER
-    | STRCONV PUNTO PARSEFLOAT PARENTESIS_IZQ EXPRESION PARENTESIS_DER
-    | REFLECT PUNTO TYPEOF PARENTESIS_IZQ EXPRESION PARENTESIS_DER
+
+      STRCONV PUNTO ATOI
+      PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
+      {:
+          RESULT = new FuncionEmbebida(
+              "atoi",
+              e
+          );
+      :}
+
+    | STRCONV PUNTO PARSEFLOAT
+      PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
+      {:
+          RESULT = new FuncionEmbebida(
+              "parsefloat",
+              e
+          );
+      :}
+
+    | REFLECT PUNTO TYPEOF
+      PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
+      {:
+          RESULT = new FuncionEmbebida(
+              "typeof",
+              e
+          );
+      :}
 ;
 
 TIPO ::=
@@ -246,8 +454,18 @@ TIPO ::=
 ;
 
 LISTA_EXPRESIONES ::=
-      EXPRESION
-    | LISTA_EXPRESIONES COMA EXPRESION
+      EXPRESION:e
+      {:
+          List<Expresion> lista = new ArrayList<>();
+          lista.add(e);
+          RESULT = lista;
+      :}
+
+    | LISTA_EXPRESIONES:l COMA EXPRESION:e
+      {:
+          l.add(e);
+          RESULT = l;
+      :}
 ;
 
 PUNTO_COMA_OPCIONAL ::=
@@ -256,23 +474,68 @@ PUNTO_COMA_OPCIONAL ::=
 ;
 
 FOR_CLASICO ::=
-    FOR INICIALIZACION_FOR
-        PUNTO_COMA
-        EXPRESION
-        PUNTO_COMA
-        ACTUALIZACION_FOR
-        BLOQUE
+    FOR
+    INICIALIZACION_FOR:i
+    PUNTO_COMA
+    EXPRESION:c
+    PUNTO_COMA
+    ACTUALIZACION_FOR:a
+    BLOQUE:b
+
+    {:
+        RESULT = new For(i, c, a, b);
+    :}
 ;
 
 INICIALIZACION_FOR ::=
-      IDENTIFICADOR IGUAL EXPRESION
-    | IDENTIFICADOR DOS_PUNTOS IGUAL EXPRESION
+      IDENTIFICADOR:id IGUAL EXPRESION:e
+      {:
+          RESULT = new Asignacion(id.toString(),e);
+      :}
+
+    | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e
+      {:
+          RESULT = new Asignacion(id.toString(),e);
+      :}
 ;
 
 ACTUALIZACION_FOR ::=
-      IDENTIFICADOR INCREMENTO
-    | IDENTIFICADOR DECREMENTO
-    | IDENTIFICADOR IGUAL EXPRESION
-    | IDENTIFICADOR MAS_IGUAL EXPRESION
-    | IDENTIFICADOR MENOS_IGUAL EXPRESION
+      IDENTIFICADOR:id IGUAL EXPRESION:e
+      {:
+          RESULT = new Asignacion(id.toString(),e);
+      :}
+
+    | IDENTIFICADOR:id MAS_IGUAL EXPRESION:e
+        {:
+            RESULT = new Asignacion(
+                id.toString(),
+                new OperacionBinaria(
+                    new Identificador(id.toString()),
+                    "+",
+                    e
+                )
+            );
+        :}
+
+    | IDENTIFICADOR:id MENOS_IGUAL EXPRESION:e
+        {:
+            RESULT = new Asignacion(
+                id.toString(),
+                new OperacionBinaria(
+                    new Identificador(id.toString()),
+                    "-",
+                    e
+                )
+            );
+        :}
+
+    | IDENTIFICADOR:id INCREMENTO
+      {:
+          RESULT = new Incremento(id.toString());
+      :}
+
+    | IDENTIFICADOR:id DECREMENTO
+      {:
+          RESULT = new Decremento(id.toString());
+      :}
 ;
