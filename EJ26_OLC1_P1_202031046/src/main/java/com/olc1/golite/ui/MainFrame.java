@@ -16,10 +16,12 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.errors.ErrorCompilador;
 import com.olc1.golite.lexer.AnalizadorLexico;
 import com.olc1.golite.lexer.Token;
 import com.olc1.golite.parser.AnalizadorSintactico;
+import com.olc1.golite.visitor.interpreter.InterpreterVisitor;
 
 public class MainFrame extends JFrame {
     private List<Token> ultimoReporteTokens;
@@ -248,6 +250,17 @@ public class MainFrame extends JFrame {
             AnalizadorSintactico sintactico = new AnalizadorSintactico();
             consola.append(sintactico.analizar(codigo));
             ultimoReporteErrores.addAll(sintactico.getErrores());
+        
+            if (sintactico.getErrores().isEmpty()) {
+                InterpreterVisitor interpreter = new InterpreterVisitor(consola);
+                consola.append("");
+                consola.append("==AST==");
+
+                for (Instruccion ins : sintactico.getAST()) {
+                    consola.append(ins.getClass().getSimpleName());
+                }
+                interpreter.ejecutar(sintactico.getAST());
+            }
         });
     
         //CERRAR PROGRAMA

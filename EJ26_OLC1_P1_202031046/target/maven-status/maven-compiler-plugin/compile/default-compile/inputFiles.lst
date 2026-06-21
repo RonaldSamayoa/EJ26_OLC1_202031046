@@ -36,5 +36,8 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ui/FrameReporteTokens.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ui/MainFrame.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/Visitor.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/BreakException.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/ContinueException.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/InterpreterVisitor.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/environment/Entorno.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/value/ValueWrapper.java

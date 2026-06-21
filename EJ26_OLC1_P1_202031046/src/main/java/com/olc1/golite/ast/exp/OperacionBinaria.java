@@ -14,4 +14,16 @@ public class OperacionBinaria extends Expresion {
         this.operador = operador;
         this.derecha = derecha;
     }
+
+    public Expresion getIzquierda() {
+        return izquierda;
+    }
+    
+    public String getOperador() {
+        return operador;
+    }
+    
+    public Expresion getDerecha() {
+        return derecha;
+    }
 }

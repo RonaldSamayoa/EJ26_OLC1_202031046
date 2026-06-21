@@ -1,12 +1,15 @@
 package com.olc1.golite.parser;
-
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.errors.ErrorCompilador;
 
+import java_cup.runtime.Symbol;
+
 public class AnalizadorSintactico {
+    private List<Instruccion> ast;
     private List<ErrorCompilador> errores = new ArrayList<>();
 
     public List<ErrorCompilador> getErrores(){
@@ -19,7 +22,9 @@ public class AnalizadorSintactico {
         try{
             LexerCup lexer = new LexerCup(new StringReader(entrada));
             parser sintactico = new parser(lexer);
-            sintactico.parse();
+            Symbol resultado = sintactico.parse();
+
+            ast = (List<Instruccion>) resultado.value;
     
             errores.addAll(sintactico.getErrores());
     
@@ -40,5 +45,9 @@ public class AnalizadorSintactico {
             );
             return "Error sintactico";
         }
+    }
+
+    public List<Instruccion> getAST() {
+        return ast;
     }
 }

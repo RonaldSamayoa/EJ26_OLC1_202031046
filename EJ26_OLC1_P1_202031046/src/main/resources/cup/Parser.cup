@@ -276,15 +276,15 @@ DECLARACION ::=
       {:
           RESULT = new Declaracion( id.toString(), null);
       :}
+
+    | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
+      {:
+          RESULT = new Declaracion(id.toString(), e);
+      :}
 ;
 
 ASIGNACION ::=
       IDENTIFICADOR:id IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Asignacion(id.toString(), e);
-      :}
-
-    | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
       {:
           RESULT = new Asignacion(id.toString(), e);
       :}
@@ -323,13 +323,20 @@ PRINT ::=
 
 VALOR ::=
       ENTERO:e
-      {: RESULT = new Literal(e); :}
+      {:
+          RESULT = new Literal(Integer.parseInt(e.toString()));
+      :}
 
     | DECIMAL:d
-      {: RESULT = new Literal(d); :}
+      {:
+          RESULT = new Literal(Double.parseDouble(d.toString()));
+      :}
 
     | CADENA:c
-      {: RESULT = new Literal(c); :}
+      {:
+          String texto = c.toString();
+          RESULT = new Literal(texto.substring( 1, texto.length()-1));
+      :}
 
     | IDENTIFICADOR:id
       {: RESULT = new Identificador(id.toString()); :}
@@ -495,7 +502,7 @@ INICIALIZACION_FOR ::=
 
     | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e
       {:
-          RESULT = new Asignacion(id.toString(),e);
+          RESULT = new Declaracion(id.toString(),e);
       :}
 ;
 

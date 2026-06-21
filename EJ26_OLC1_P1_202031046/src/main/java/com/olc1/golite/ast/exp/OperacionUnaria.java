@@ -12,4 +12,12 @@ public class OperacionUnaria extends Expresion {
         this.operador = operador;
         this.expresion = expresion;
     }
+
+    public String getOperador() {
+        return operador;
+    }
+    
+    public Expresion getExpresion() {
+        return expresion;
+    }
 }
