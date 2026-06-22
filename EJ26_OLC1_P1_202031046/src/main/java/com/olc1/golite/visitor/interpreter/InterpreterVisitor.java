@@ -72,6 +72,7 @@ public class InterpreterVisitor {
 
         if (ins instanceof Decremento d) {
             ejecutarDecremento(d);
+            return;
         }
 
         if (ins instanceof For f) {
@@ -107,15 +108,21 @@ public class InterpreterVisitor {
 
     private void ejecutarAsignacion(
         Asignacion a) {
+        
+        System.out.println(
+                "ASIGNANDO -> " +
+                a.getIdentificador() +
+                " = " +
+                a.getValor().getClass().getSimpleName()
+            );
 
-        Object valor = evaluar(
-            a.getValor()
+        Object valor = evaluar(a.getValor());
+        System.out.println(
+            "VALOR CALCULADO -> " + valor
         );
 
-        entorno.asignar(
-            a.getIdentificador(),
-            new ValueWrapper(valor)
-        );
+        entorno.asignar(a.getIdentificador(),
+            new ValueWrapper(valor));
     }
 
     private void ejecutarPrint(
@@ -235,15 +242,16 @@ public class InterpreterVisitor {
     }
 
     private void ejecutarBreak(Break b) {
+        System.out.println("BREAK EJECUTADO");
         throw new BreakException();
     }
     
     private void ejecutarContinue(Continue c) {
+        System.out.println("CONTINUE EJECUTADO");
         throw new ContinueException();
     }
 
     private void ejecutarFor(For f) {
-
         Entorno anterior = entorno;
         entorno = new Entorno(anterior);
     
@@ -272,19 +280,19 @@ public class InterpreterVisitor {
                 }
     
                 try {
-    
+
                     ejecutar(f.getBloque());
-    
+                
                 } catch (ContinueException ex) {
-    
+                
                     if (f.getActualizacion() != null) {
                         ejecutar(f.getActualizacion());
                     }
-    
+                
                     continue;
-    
+                
                 } catch (BreakException ex) {
-    
+                
                     break;
                 }
     
@@ -407,11 +415,21 @@ public class InterpreterVisitor {
 
             case "==":
 
-                return izq.equals(der);
+                if (izq instanceof Number && der instanceof Number) {
+                    return ((Number) izq).doubleValue()
+                            == ((Number) der).doubleValue();
+                }
+
+                return java.util.Objects.equals(izq, der);
 
             case "!=":
 
-                return !izq.equals(der);
+                if (izq instanceof Number && der instanceof Number) {
+                    return ((Number) izq).doubleValue()
+                            != ((Number) der).doubleValue();
+                }
+
+                return !java.util.Objects.equals(izq, der);
 
             case "&&":
 

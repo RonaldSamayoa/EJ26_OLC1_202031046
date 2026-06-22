@@ -291,12 +291,20 @@ ASIGNACION ::=
 
     | IDENTIFICADOR:id MAS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
       {:
-          RESULT = new Asignacion(id.toString(), e);
+          RESULT = new Asignacion(
+              id.toString(),
+              new OperacionBinaria(
+                  new Identificador(id.toString()),
+                  "+", e ) );
       :}
 
     | IDENTIFICADOR:id MENOS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
       {:
-          RESULT = new Asignacion(id.toString(), e);
+          RESULT = new Asignacion(
+            id.toString(),
+            new OperacionBinaria(
+                new Identificador(id.toString()),
+                "-", e) );
       :}
 ;
 
