@@ -473,30 +473,30 @@ public class InterpreterVisitor {
 
     private Object evaluarFuncionEmbebida(
         FuncionEmbebida f) {
-
+            System.out.println(
+                "FUNCION -> " + f.getNombre()
+            );    
         Object valor =
                 evaluar(
                     f.getArgumento()
                 );
 
-        switch (f.getNombre()) {
+        switch (f.getNombre().toLowerCase()) {
 
             case "atoi":
-                return Integer.parseInt(
+               return Integer.parseInt(
                         valor.toString());
-
-            case "parseFloat":
+                
+            case "parsefloat":
                 return Double.parseDouble(
                         valor.toString());
-
+                
             case "typeof":
-
                 if (valor == null) {
                     return "nil";
                 }
-
-                return valor.getClass()
-                        .getSimpleName();
+                
+                return valor.getClass().getSimpleName();
         }
 
         throw new RuntimeException(
