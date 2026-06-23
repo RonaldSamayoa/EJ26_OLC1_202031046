@@ -51,6 +51,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "break"               { return token(TipoToken.BREAK, yytext()); }
 "continue"            { return token(TipoToken.CONTINUE, yytext()); }
+"return"              { return token(TipoToken.RETURN, yytext()); }
+"func"                { return token(TipoToken.FUNC, yytext()); }
 
 "true"                { return token(TipoToken.TRUE, yytext()); }
 "false"               { return token(TipoToken.FALSE, yytext()); }

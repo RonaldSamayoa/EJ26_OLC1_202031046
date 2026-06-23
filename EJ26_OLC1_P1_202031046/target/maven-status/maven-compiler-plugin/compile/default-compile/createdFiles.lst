@@ -1,7 +1,6 @@
 com/olc1/golite/parser/parser$CUP$parser$actions.class
 com/olc1/golite/Main.class
 com/olc1/golite/ui/EditorPanel.class
-com/olc1/golite/parser/parser.class
 com/olc1/golite/ast/stm/Print.class
 com/olc1/golite/ast/stm/Asignacion.class
 com/olc1/golite/ast/exp/FuncionEmbebida.class
@@ -14,8 +13,10 @@ com/olc1/golite/ast/stm/Bloque.class
 com/olc1/golite/ast/exp/Expresion.class
 com/olc1/golite/ast/stm/For.class
 com/olc1/golite/ui/ConsolePanel.class
+com/olc1/golite/ast/stm/LlamadaFuncionStmt.class
 com/olc1/golite/visitor/interpreter/environment/Entorno.class
 com/olc1/golite/ast/exp/Identificador.class
+com/olc1/golite/ast/stm/Return.class
 com/olc1/golite/parser/AnalizadorSintactico.class
 com/olc1/golite/ui/FrameReporteTokens.class
 com/olc1/golite/ast/exp/Literal.class
@@ -23,6 +24,7 @@ com/olc1/golite/ui/MainFrame$1.class
 com/olc1/golite/lexer/Token.class
 com/olc1/golite/ui/MainFrame.class
 com/olc1/golite/ui/EditorPanel$1.class
+com/olc1/golite/ast/exp/LlamadaFuncion.class
 com/olc1/golite/ast/stm/Instruccion.class
 com/olc1/golite/symbols/TablaSimbolos.class
 com/olc1/golite/visitor/interpreter/ContinueException.class
@@ -36,9 +38,11 @@ com/olc1/golite/ast/stm/Continue.class
 com/olc1/golite/ast/stm/Break.class
 com/olc1/golite/ast/stm/If.class
 com/olc1/golite/visitor/Visitor.class
+com/olc1/golite/visitor/interpreter/ReturnException.class
 com/olc1/golite/visitor/interpreter/value/ValueWrapper.class
 com/olc1/golite/ast/ASTNode.class
 com/olc1/golite/ast/stm/Incremento.class
+com/olc1/golite/ast/stm/Funcion.class
 com/olc1/golite/visitor/interpreter/InterpreterVisitor.class
 com/olc1/golite/visitor/interpreter/BreakException.class
 com/olc1/golite/symbols/Simbolo.class

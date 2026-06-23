@@ -46,6 +46,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "break"      { return symbol(sym.BREAK); }
 "continue"   { return symbol(sym.CONTINUE); }
+"return"     { return symbol(sym.RETURN); }
+"func"       { return symbol(sym.FUNC); }
 
 "true"       {return symbol(sym.TRUE);}
 "false"       {return symbol(sym.FALSE);}

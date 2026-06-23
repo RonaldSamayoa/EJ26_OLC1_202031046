@@ -8,6 +8,7 @@ import com.olc1.golite.ast.exp.Literal;
 import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
+import com.olc1.golite.ast.exp.LlamadaFuncion;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -16,10 +17,13 @@ import com.olc1.golite.ast.stm.Print;
 import com.olc1.golite.ast.stm.Bloque;
 import com.olc1.golite.ast.stm.Break;
 import com.olc1.golite.ast.stm.Continue;
+import com.olc1.golite.ast.stm.Return;
 import com.olc1.golite.ast.stm.If;
 import com.olc1.golite.ast.stm.For;
 import com.olc1.golite.ast.stm.Incremento;
 import com.olc1.golite.ast.stm.Decremento;
+import com.olc1.golite.ast.stm.Funcion;
+import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 
 parser code {:
 
@@ -113,6 +117,8 @@ terminal FALSE;
 
 terminal BREAK;
 terminal CONTINUE;
+terminal RETURN;
+terminal FUNC;
 
 terminal INCREMENTO;
 terminal DECREMENTO;
@@ -132,6 +138,7 @@ non terminal If IF_SENTENCIA;
 non terminal For FOR_SENTENCIA;
 non terminal Break BREAK_SENTENCIA;
 non terminal Continue CONTINUE_SENTENCIA;
+non terminal Return RETURN_SENTENCIA;
 non terminal Incremento INCREMENTO_SENTENCIA;
 non terminal Decremento DECREMENTO_SENTENCIA;
 non terminal FuncionEmbebida FUNCION_EMBEBIDA;
@@ -141,6 +148,11 @@ non terminal Object PUNTO_COMA_OPCIONAL;
 non terminal For FOR_CLASICO;
 non terminal Instruccion INICIALIZACION_FOR;
 non terminal Instruccion ACTUALIZACION_FOR;
+non terminal Funcion FUNCION_DECLARACION;
+non terminal LlamadaFuncion LLAMADA_FUNCION;
+non terminal List LISTA_PARAMETROS;
+non terminal List LISTA_ARGUMENTOS;
+non terminal LlamadaFuncionStmt LLAMADA_FUNCION_STMT;
 
 precedence left OR;
 precedence left AND;
@@ -190,9 +202,12 @@ SENTENCIA ::=
     | FOR_SENTENCIA:f    {: RESULT = f; :}
     | BREAK_SENTENCIA:b  {: RESULT = b; :}
     | CONTINUE_SENTENCIA:c {: RESULT = c; :}
+    | RETURN_SENTENCIA:r {: RESULT = r; :}
+    | FUNCION_DECLARACION:f {: RESULT = f; :}
     | BLOQUE:b           {: RESULT = b; :}
     | INCREMENTO_SENTENCIA:i {: RESULT = i; :}
     | DECREMENTO_SENTENCIA:d {: RESULT = d; :}
+    | LLAMADA_FUNCION_STMT:l {: RESULT = l; :}
 
     | error PUNTO_COMA
     | error LLAVE_DER
@@ -363,6 +378,9 @@ VALOR ::=
 
     | FUNCION_EMBEBIDA:f
         {: RESULT = (Expresion) f; :}
+    
+    | LLAMADA_FUNCION:f
+      {: RESULT = f; :}
 ;
 
 EXPRESION ::=
@@ -465,7 +483,20 @@ FUNCION_EMBEBIDA ::=
 ;
 
 TIPO ::=
-    INT | FLOAT64 | STRING | BOOL | RUNE
+      INT
+      {: RESULT = "int"; :}
+
+    | FLOAT64
+      {: RESULT = "float64"; :}
+
+    | STRING
+      {: RESULT = "string"; :}
+
+    | BOOL
+      {:  RESULT = "bool"; :}
+
+    | RUNE
+      {: RESULT = "rune"; :}
 ;
 
 LISTA_EXPRESIONES ::=
@@ -553,4 +584,109 @@ ACTUALIZACION_FOR ::=
       {:
           RESULT = new Decremento(id.toString());
       :}
+;
+
+RETURN_SENTENCIA ::=
+      RETURN EXPRESION:e PUNTO_COMA_OPCIONAL
+      {: RESULT = new Return(e); :}
+;
+
+LISTA_PARAMETROS ::=
+      IDENTIFICADOR:id
+      {:
+          List<String> lista = new ArrayList<>();
+          lista.add(id.toString());
+          RESULT = lista;
+      :}
+
+    | LISTA_PARAMETROS:l
+      COMA
+      IDENTIFICADOR:id
+      {:
+          l.add(id.toString());
+          RESULT = l;
+      :}
+;
+
+FUNCION_DECLARACION ::=
+      FUNC
+      IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      PARENTESIS_DER
+      BLOQUE:b
+      {:
+          RESULT = new Funcion(id.toString(), new ArrayList<String>(), null, b);
+      :}
+
+    | FUNC
+      IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      LISTA_PARAMETROS:p
+      PARENTESIS_DER
+      BLOQUE:b
+      {:
+          RESULT = new Funcion( id.toString(), p, null, b);
+      :}
+
+    | FUNC
+      IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      PARENTESIS_DER
+      TIPO:t
+      BLOQUE:b
+      {:
+          RESULT = new Funcion(id.toString(), new ArrayList<String>(), t.toString(), b);
+      :}
+
+    | FUNC
+      IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      LISTA_PARAMETROS:p
+      PARENTESIS_DER
+      TIPO:t
+      BLOQUE:b
+      {:
+          RESULT = new Funcion(id.toString(), p, t.toString(), b);
+      :}
+;
+
+LLAMADA_FUNCION ::=
+      IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      PARENTESIS_DER
+      {:
+          RESULT =
+              new LlamadaFuncion(id.toString(), new ArrayList<Expresion>());
+      :}
+
+    | IDENTIFICADOR:id
+      PARENTESIS_IZQ
+      LISTA_ARGUMENTOS:a
+      PARENTESIS_DER
+      {:
+          RESULT =  new LlamadaFuncion(id.toString(), a);
+      :}
+;
+
+LISTA_ARGUMENTOS ::=
+      EXPRESION:e
+      {:
+          List<Expresion> lista = new ArrayList<>();
+          lista.add(e);
+          RESULT = lista;
+      :}
+
+    | LISTA_ARGUMENTOS:l
+      COMA
+      EXPRESION:e
+      {:
+          l.add(e);
+          RESULT = l;
+      :}
+;
+
+LLAMADA_FUNCION_STMT ::=
+      LLAMADA_FUNCION:f
+      PUNTO_COMA_OPCIONAL
+      {: RESULT =  new LlamadaFuncionStmt(f); :}
 ;

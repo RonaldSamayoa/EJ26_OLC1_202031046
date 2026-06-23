@@ -15,6 +15,8 @@ public enum TipoToken {
 
     BREAK, 
     CONTINUE,
+    RETURN,
+    FUNC,
 
     TRUE,
     FALSE, 

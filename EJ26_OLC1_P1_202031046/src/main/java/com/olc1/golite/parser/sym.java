@@ -29,18 +29,19 @@ public interface sym {
   public static final int NIL = 29;
   public static final int OR = 47;
   public static final int BOOL = 10;
-  public static final int INCREMENTO = 53;
+  public static final int INCREMENTO = 55;
   public static final int ATOI = 36;
-  public static final int UMENOS = 55;
+  public static final int UMENOS = 57;
   public static final int MAS_IGUAL = 27;
   public static final int IF = 30;
   public static final int PUNTO_COMA = 14;
   public static final int IGUAL_IGUAL = 25;
   public static final int EOF = 0;
   public static final int DECIMAL = 5;
+  public static final int RETURN = 53;
   public static final int PARENTESIS_DER = 43;
   public static final int TRUE = 49;
-  public static final int DECREMENTO = 54;
+  public static final int DECREMENTO = 56;
   public static final int error = 1;
   public static final int COMA = 41;
   public static final int FLOAT64 = 8;
@@ -54,6 +55,7 @@ public interface sym {
   public static final int ELSE = 31;
   public static final int LLAVE_DER = 45;
   public static final int PUNTO = 40;
+  public static final int FUNC = 54;
   public static final int MAYOR_IGUAL = 23;
   public static final int STRING = 9;
   public static final int FMT = 33;
@@ -118,6 +120,8 @@ public interface sym {
   "FALSE",
   "BREAK",
   "CONTINUE",
+  "RETURN",
+  "FUNC",
   "INCREMENTO",
   "DECREMENTO",
   "UMENOS"

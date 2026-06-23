@@ -4,6 +4,7 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/FuncionEmbebida.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/Identificador.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/Literal.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/LlamadaFuncion.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/OperacionBinaria.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/OperacionUnaria.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Asignacion.java
@@ -13,10 +14,13 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Declaracion.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Decremento.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/For.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Funcion.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/If.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Incremento.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Instruccion.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/LlamadaFuncionStmt.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Print.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Return.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/errors/ErrorCompilador.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/lexer/AnalizadorLexico.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/lexer/Lexer.java
@@ -39,5 +43,6 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/BreakException.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/ContinueException.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/InterpreterVisitor.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/ReturnException.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/environment/Entorno.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/visitor/interpreter/value/ValueWrapper.java

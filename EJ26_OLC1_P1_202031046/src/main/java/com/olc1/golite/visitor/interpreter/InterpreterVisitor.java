@@ -1,10 +1,13 @@
 package com.olc1.golite.visitor.interpreter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.olc1.golite.ast.exp.Expresion;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.Identificador;
 import com.olc1.golite.ast.exp.Literal;
+import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.stm.Asignacion;
@@ -14,10 +17,13 @@ import com.olc1.golite.ast.stm.Continue;
 import com.olc1.golite.ast.stm.Declaracion;
 import com.olc1.golite.ast.stm.Decremento;
 import com.olc1.golite.ast.stm.For;
+import com.olc1.golite.ast.stm.Funcion;
 import com.olc1.golite.ast.stm.If;
 import com.olc1.golite.ast.stm.Incremento;
 import com.olc1.golite.ast.stm.Instruccion;
+import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 import com.olc1.golite.ast.stm.Print;
+import com.olc1.golite.ast.stm.Return;
 import com.olc1.golite.ui.ConsolePanel;
 import com.olc1.golite.visitor.interpreter.environment.Entorno;
 import com.olc1.golite.visitor.interpreter.value.ValueWrapper;
@@ -26,15 +32,31 @@ public class InterpreterVisitor {
 
     private Entorno entorno;
     private ConsolePanel consola;
+    private Map<String, Funcion> funciones;
 
     public InterpreterVisitor(ConsolePanel consola) {
         this.consola = consola;
         this.entorno = new Entorno();
+        this.funciones = new HashMap<>();
     }
 
     public void ejecutar(List<Instruccion> instrucciones) {
         for (Instruccion ins : instrucciones) {
-            ejecutar(ins);
+            if (ins instanceof Funcion f) {
+                if (funciones.containsKey(
+                        f.getNombre())) {
+    
+                    throw new RuntimeException(
+                        "La funcion ya existe: "+ f.getNombre());
+                }
+                funciones.put(f.getNombre(), f);
+            }
+        }
+    
+        for (Instruccion ins : instrucciones) {
+            if (!(ins instanceof Funcion)) {
+                ejecutar(ins);
+            }
         }
     }
 
@@ -87,6 +109,20 @@ public class InterpreterVisitor {
 
         if (ins instanceof Continue c) {
             ejecutarContinue(c);
+            return;
+        }
+
+        if (ins instanceof Funcion f) {
+            return;
+        }
+
+        if (ins instanceof Return r) {
+            ejecutarReturn(r);
+            return;
+        }
+
+        if (ins instanceof LlamadaFuncionStmt l) {
+            ejecutarFuncion( l.getLlamada());
             return;
         }
     }
@@ -307,6 +343,42 @@ public class InterpreterVisitor {
         }
     }
 
+    private Object ejecutarFuncion( LlamadaFuncion llamada) {
+
+        Funcion funcion = funciones.get(llamada.getNombre());
+
+        if (funcion == null) {
+
+            throw new RuntimeException(
+                "Funcion no definida: "
+                + llamada.getNombre());
+        }
+
+        Entorno anterior = entorno;
+        entorno = new Entorno(anterior);
+
+        try {
+            try {
+                ejecutar(
+                    funcion.getBloque());
+            } catch (ReturnException ex) {
+                return ex.getValor();
+            }
+            return null;
+        } finally {
+            entorno = anterior;
+        }
+    }
+
+    private void ejecutarReturn(Return r) {
+        Object valor = null;
+
+        if (r.getValor() != null) {
+            valor = evaluar(r.getValor());
+        }
+        throw new ReturnException(valor);
+    }
+
     private Object evaluar(Expresion exp) {
         if (exp instanceof Literal l) {
             return l.getValor();
@@ -338,6 +410,10 @@ public class InterpreterVisitor {
 
         if (exp instanceof FuncionEmbebida f) {
             return evaluarFuncionEmbebida(f);
+        }
+
+        if (exp instanceof LlamadaFuncion lf) {
+            return ejecutarFuncion(lf);
         }
 
         return null;
