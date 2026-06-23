@@ -363,31 +363,34 @@ public class InterpreterVisitor {
         entorno = new Entorno(anterior);
 
         try {
-            for (int i = 0;
-                i < funcion.getParametros().size();
-                i++) {
+            for (int i = 0;  i < funcion.getParametros().size(); i++) {
         
                 Parametro parametro = funcion.getParametros().get(i);
             
                 Object valor = evaluar(llamada.getArgumentos().get(i));
             
-                if (!tipoCompatible(parametro.getTipo(),
-                        valor)) {
+                if (!tipoCompatible(parametro.getTipo(), valor)) {
             
-                    throw new RuntimeException(
-                        "Tipo incorrecto para parametro "
+                    throw new RuntimeException( "Tipo incorrecto para parametro "
                         + parametro.getNombre());
                 }
             
-                entorno.declarar(parametro.getNombre(),
-                    new ValueWrapper(valor));
+                entorno.declarar(parametro.getNombre(), new ValueWrapper(valor));
             }
 
             try {
                 ejecutar(funcion.getBloque());
 
             } catch (ReturnException ex) {
-                return ex.getValor();
+                if (!tipoCompatible( funcion.getTipoRetorno(), ex.getValor())) {
+                        throw new RuntimeException( "Tipo de retorno incorrecto en "
+                            + funcion.getNombre());
+                    }
+                    return ex.getValor();
+               }
+               if (funcion.getTipoRetorno() != null) {
+                throw new RuntimeException( "La funcion "
+                    + funcion.getNombre() + " debe retornar un valor");
             }
             return null;
         } finally {
@@ -606,8 +609,11 @@ public class InterpreterVisitor {
     }
 
     private boolean tipoCompatible(String tipo, Object valor) {
+        if (tipo == null) {
+            return valor == null;
+        }
+        
         switch (tipo) {
-
             case "int":
                 return valor instanceof Integer;
 
