@@ -5,13 +5,13 @@ import java.util.List;
 public class Funcion extends Instruccion {
 
     private String nombre;
-    private List<String> parametros;
+    private List<Parametro> parametros;
     private String tipoRetorno;
     private Bloque bloque;
     
     public Funcion(
         String nombre,
-        List<String> parametros,
+        List<Parametro> parametros,
         String tipoRetorno,
         Bloque bloque) {
 
@@ -25,7 +25,7 @@ public class Funcion extends Instruccion {
         return nombre;
     }
 
-    public List<String> getParametros() {
+    public List<Parametro> getParametros() {
         return parametros;
     }
 

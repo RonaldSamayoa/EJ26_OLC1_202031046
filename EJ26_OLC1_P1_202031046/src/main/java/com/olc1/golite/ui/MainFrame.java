@@ -253,13 +253,25 @@ public class MainFrame extends JFrame {
         
             if (sintactico.getErrores().isEmpty()) {
                 InterpreterVisitor interpreter = new InterpreterVisitor(consola);
+            
                 consola.append("");
                 consola.append("==AST==");
-
+            
                 for (Instruccion ins : sintactico.getAST()) {
                     consola.append(ins.getClass().getSimpleName());
                 }
-                interpreter.ejecutar(sintactico.getAST());
+            
+                try {
+            
+                    interpreter.ejecutar(sintactico.getAST());
+            
+                } catch (RuntimeException ex) {
+            
+                    consola.append("");
+                    consola.append("==ERROR SEMANTICO==");
+                    consola.append(ex.getMessage());
+            
+                }
             }
         });
     

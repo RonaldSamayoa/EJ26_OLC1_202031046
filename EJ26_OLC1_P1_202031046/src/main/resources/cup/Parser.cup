@@ -24,6 +24,7 @@ import com.olc1.golite.ast.stm.Incremento;
 import com.olc1.golite.ast.stm.Decremento;
 import com.olc1.golite.ast.stm.Funcion;
 import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
+import com.olc1.golite.ast.stm.Parametro;
 
 parser code {:
 
@@ -150,6 +151,7 @@ non terminal Instruccion INICIALIZACION_FOR;
 non terminal Instruccion ACTUALIZACION_FOR;
 non terminal Funcion FUNCION_DECLARACION;
 non terminal LlamadaFuncion LLAMADA_FUNCION;
+non terminal Parametro PARAMETRO;
 non terminal List LISTA_PARAMETROS;
 non terminal List LISTA_ARGUMENTOS;
 non terminal LlamadaFuncionStmt LLAMADA_FUNCION_STMT;
@@ -591,19 +593,26 @@ RETURN_SENTENCIA ::=
       {: RESULT = new Return(e); :}
 ;
 
-LISTA_PARAMETROS ::=
-      IDENTIFICADOR:id
+PARAMETRO ::=
+      IDENTIFICADOR:id TIPO:t
       {:
-          List<String> lista = new ArrayList<>();
-          lista.add(id.toString());
+          RESULT = new Parametro( id.toString(), t.toString());
+      :}
+;
+
+LISTA_PARAMETROS ::=
+      PARAMETRO:p
+      {:
+          List<Parametro> lista = new ArrayList<>();
+          lista.add(p);
           RESULT = lista;
       :}
 
     | LISTA_PARAMETROS:l
       COMA
-      IDENTIFICADOR:id
+      PARAMETRO:p
       {:
-          l.add(id.toString());
+          l.add(p);
           RESULT = l;
       :}
 ;
@@ -615,7 +624,7 @@ FUNCION_DECLARACION ::=
       PARENTESIS_DER
       BLOQUE:b
       {:
-          RESULT = new Funcion(id.toString(), new ArrayList<String>(), null, b);
+          RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), null, b);
       :}
 
     | FUNC
@@ -635,7 +644,7 @@ FUNCION_DECLARACION ::=
       TIPO:t
       BLOQUE:b
       {:
-          RESULT = new Funcion(id.toString(), new ArrayList<String>(), t.toString(), b);
+          RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), t.toString(), b);
       :}
 
     | FUNC

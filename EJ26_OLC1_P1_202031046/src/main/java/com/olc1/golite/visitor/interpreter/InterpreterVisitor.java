@@ -22,6 +22,7 @@ import com.olc1.golite.ast.stm.If;
 import com.olc1.golite.ast.stm.Incremento;
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
+import com.olc1.golite.ast.stm.Parametro;
 import com.olc1.golite.ast.stm.Print;
 import com.olc1.golite.ast.stm.Return;
 import com.olc1.golite.ui.ConsolePanel;
@@ -343,14 +344,18 @@ public class InterpreterVisitor {
         }
     }
 
-    private Object ejecutarFuncion( LlamadaFuncion llamada) {
-
+    private Object ejecutarFuncion(LlamadaFuncion llamada) {
         Funcion funcion = funciones.get(llamada.getNombre());
 
         if (funcion == null) {
-
             throw new RuntimeException(
                 "Funcion no definida: "
+                + llamada.getNombre());
+        }
+
+        if (llamada.getArgumentos().size() != funcion.getParametros().size()) {
+            throw new RuntimeException(
+                "Cantidad incorrecta de parametros en "
                 + llamada.getNombre());
         }
 
@@ -358,9 +363,29 @@ public class InterpreterVisitor {
         entorno = new Entorno(anterior);
 
         try {
+            for (int i = 0;
+                i < funcion.getParametros().size();
+                i++) {
+        
+                Parametro parametro = funcion.getParametros().get(i);
+            
+                Object valor = evaluar(llamada.getArgumentos().get(i));
+            
+                if (!tipoCompatible(parametro.getTipo(),
+                        valor)) {
+            
+                    throw new RuntimeException(
+                        "Tipo incorrecto para parametro "
+                        + parametro.getNombre());
+                }
+            
+                entorno.declarar(parametro.getNombre(),
+                    new ValueWrapper(valor));
+            }
+
             try {
-                ejecutar(
-                    funcion.getBloque());
+                ejecutar(funcion.getBloque());
+
             } catch (ReturnException ex) {
                 return ex.getValor();
             }
@@ -578,5 +603,27 @@ public class InterpreterVisitor {
         throw new RuntimeException(
             "Funcion embebida no soportada"
         );
+    }
+
+    private boolean tipoCompatible(String tipo, Object valor) {
+        switch (tipo) {
+
+            case "int":
+                return valor instanceof Integer;
+
+            case "float64":
+                return valor instanceof Double;
+
+            case "string":
+                return valor instanceof String;
+
+            case "bool":
+                return valor instanceof Boolean;
+
+            case "rune":
+                return valor instanceof Character;
+        }
+
+        return true;
     }
 }
