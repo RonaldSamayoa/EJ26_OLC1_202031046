@@ -76,6 +76,9 @@ public enum TipoToken {
     PARENTESIS_IZQ,
     PARENTESIS_DER,
 
+    CORCHETE_IZQ,
+    CORCHETE_DER,
+
     LLAVE_IZQ,
     LLAVE_DER,
 

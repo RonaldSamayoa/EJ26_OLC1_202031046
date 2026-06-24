@@ -9,6 +9,7 @@ import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
+import com.olc1.golite.ast.exp.SliceLiteral;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -114,6 +115,8 @@ terminal PARENTESIS_IZQ;
 terminal PARENTESIS_DER;
 terminal LLAVE_IZQ;
 terminal LLAVE_DER;
+terminal CORCHETE_IZQ;
+terminal CORCHETE_DER;
 
 terminal AND;
 terminal OR;
@@ -165,6 +168,7 @@ non terminal Switch SWITCH_SENTENCIA;
 non terminal CaseSwitch CASE_SWITCH;
 non terminal List LISTA_CASES;
 non terminal Bloque DEFAULT_SWITCH;
+non terminal SliceLiteral SLICE_LITERAL;
 
 precedence left OR;
 precedence left AND;
@@ -359,18 +363,13 @@ PRINT ::=
 
 VALOR ::=
       ENTERO:e
-      {:
-          RESULT = new Literal(Integer.parseInt(e.toString()));
-      :}
+      {: RESULT = new Literal(Integer.parseInt(e.toString())); :}
 
     | DECIMAL:d
-      {:
-          RESULT = new Literal(Double.parseDouble(d.toString()));
-      :}
+      {: RESULT = new Literal(Double.parseDouble(d.toString())); :}
 
     | CADENA:c
-      {:
-          String texto = c.toString();
+      {:String texto = c.toString();
           RESULT = new Literal(texto.substring( 1, texto.length()-1));
       :}
 
@@ -394,6 +393,9 @@ VALOR ::=
     
     | LLAMADA_FUNCION:f
       {: RESULT = f; :}
+    
+    | SLICE_LITERAL:s
+      {: RESULT = s; :}
 ;
 
 EXPRESION ::=
@@ -510,6 +512,21 @@ TIPO ::=
 
     | RUNE
       {: RESULT = "rune"; :}
+
+    | CORCHETE_IZQ CORCHETE_DER INT
+      {: RESULT = "[]int"; :}
+
+    | CORCHETE_IZQ CORCHETE_DER FLOAT64
+      {: RESULT = "[]float64"; :}
+
+    | CORCHETE_IZQ CORCHETE_DER STRING
+      {: RESULT = "[]string"; :}
+
+    | CORCHETE_IZQ CORCHETE_DER BOOL
+      {: RESULT = "[]bool"; :}
+
+    | CORCHETE_IZQ CORCHETE_DER RUNE
+      {: RESULT = "[]rune"; :}
 ;
 
 LISTA_EXPRESIONES ::=
@@ -744,4 +761,15 @@ SWITCH_SENTENCIA ::=
     LLAVE_DER
 
     {: RESULT = new Switch(e, c, d); :}
+;
+
+SLICE_LITERAL ::=
+      CORCHETE_IZQ
+      CORCHETE_DER
+      TIPO:t
+      LLAVE_IZQ
+      LISTA_EXPRESIONES:l
+      LLAVE_DER
+
+      {: RESULT = new SliceLiteral(l); :}
 ;

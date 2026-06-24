@@ -13,6 +13,7 @@ import com.olc1.golite.ast.exp.Literal;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
+import com.olc1.golite.ast.exp.SliceLiteral;
 import com.olc1.golite.ast.stm.Asignacion;
 import com.olc1.golite.ast.stm.Bloque;
 import com.olc1.golite.ast.stm.Break;
@@ -470,6 +471,10 @@ public class InterpreterVisitor {
             return ejecutarFuncion(lf);
         }
 
+        if (exp instanceof SliceLiteral s) {
+            return evaluarSliceLiteral(s);
+        }
+
         return null;
     }
 
@@ -626,5 +631,14 @@ public class InterpreterVisitor {
         if (s.getBloqueDefault() != null) {
             ejecutar(s.getBloqueDefault());
         }
+    }
+
+    private Object evaluarSliceLiteral(SliceLiteral slice) {
+        ArrayList<Object> valores = new ArrayList<>();
+
+        for (Expresion e : slice.getElementos()) {
+            valores.add( evaluar(e));
+        }
+        return valores;
     }
 }

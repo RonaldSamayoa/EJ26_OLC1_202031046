@@ -124,6 +124,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "{"                   { return token(TipoToken.LLAVE_IZQ, yytext()); }
 "}"                   { return token(TipoToken.LLAVE_DER, yytext()); }
+"["                   { return token(TipoToken.CORCHETE_IZQ, yytext()); }
+"]"                   { return token(TipoToken.CORCHETE_DER, yytext()); }
 
 {IDENTIFICADOR}       { return token(TipoToken.IDENTIFICADOR, yytext()); }
 

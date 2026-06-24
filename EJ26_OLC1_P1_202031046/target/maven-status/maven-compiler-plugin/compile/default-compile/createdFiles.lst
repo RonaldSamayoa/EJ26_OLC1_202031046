@@ -2,6 +2,7 @@ com/olc1/golite/parser/parser$CUP$parser$actions.class
 com/olc1/golite/ast/stm/Switch.class
 com/olc1/golite/Main.class
 com/olc1/golite/ui/EditorPanel.class
+com/olc1/golite/ast/exp/SliceLiteral.class
 com/olc1/golite/parser/parser.class
 com/olc1/golite/ast/stm/Print.class
 com/olc1/golite/ast/stm/Asignacion.class

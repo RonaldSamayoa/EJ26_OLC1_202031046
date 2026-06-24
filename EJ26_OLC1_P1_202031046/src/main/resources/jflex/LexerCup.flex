@@ -98,6 +98,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 ")"       {return symbol(sym.PARENTESIS_DER);}
 "{"       {return symbol(sym.LLAVE_IZQ);}
 "}"       {return symbol(sym.LLAVE_DER);}
+"["     { return symbol(sym.CORCHETE_IZQ); }
+"]"     { return symbol(sym.CORCHETE_DER); }
 
 "fmt"       {return symbol(sym.FMT);}
 "Println"       {return symbol(sym.PRINTLN);}
