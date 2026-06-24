@@ -1,4 +1,5 @@
 package com.olc1.golite.visitor.interpreter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +55,15 @@ public class InterpreterVisitor {
         }
 
         for (Instruccion ins : instrucciones) {
+            if (!(ins instanceof Funcion)) {
+                validarFuncionesGlobales(ins);
+            }
+        }
+
+        for (Instruccion ins : instrucciones) {
             if (ins instanceof Funcion f) {
+                validarFuncionesDentroDeFuncion(f.getBloque());
+
                 if (funciones.containsKey( f.getNombre())) {
                     throw new RuntimeException("La funcion ya existe: "+ f.getNombre());
                 }
@@ -63,7 +72,7 @@ public class InterpreterVisitor {
                     throw new RuntimeException( "Ya existe una variable llamada "
                         + f.getNombre());
                 }
-                
+
                 HashSet<String> nombres = new HashSet<>();
 
                 for (Parametro p : f.getParametros()) {
@@ -75,16 +84,76 @@ public class InterpreterVisitor {
                 funciones.put(f.getNombre(), f);
             }
         }
-    
-        for (Instruccion ins : instrucciones) {
-            if (!(ins instanceof Funcion)) {
-                ejecutar(ins);
+
+        Funcion main = funciones.get("main");
+
+        if (main == null) {
+            throw new RuntimeException("No existe la funcion main");
+        }
+
+        if (!main.getParametros().isEmpty()) {
+            throw new RuntimeException( "La funcion main no puede recibir parametros");
+        }
+
+        if (main.getTipoRetorno() != null) {
+            throw new RuntimeException(
+                "La funcion main no puede retornar valores");
+        }
+
+        ejecutarFuncion( new LlamadaFuncion("main", new ArrayList<>()));
+    }
+
+    private void validarFuncionesGlobales(Instruccion ins) {
+        if (ins instanceof Funcion) {
+            throw new RuntimeException("Las funciones solo pueden declararse en el ambito global");
+        }
+
+        if (ins instanceof Bloque b) {
+            for (Instruccion i : b.getInstrucciones()) {
+                validarFuncionesGlobales(i);
+            }
+        }
+
+        if (ins instanceof If i) {
+            validarFuncionesGlobales(i.getBloqueThen());
+
+            if (i.getBloqueElse() != null) {
+                validarFuncionesGlobales(i.getBloqueElse());
+            }
+        }
+
+        if (ins instanceof For f) {
+            validarFuncionesGlobales(f.getBloque());
+        }
+    }
+
+    private void validarFuncionesDentroDeFuncion( Bloque bloque) {
+        for (Instruccion ins : bloque.getInstrucciones()) {
+            if (ins instanceof Funcion) {
+                throw new RuntimeException("Las funciones solo pueden declararse en el ambito global");
+            }
+
+            if (ins instanceof Bloque b) {
+                validarFuncionesDentroDeFuncion(b);
+            }
+
+            if (ins instanceof If i) {
+                if (i.getBloqueThen() instanceof Bloque bt) {
+                    validarFuncionesDentroDeFuncion(bt);
+                }
+
+                if (i.getBloqueElse() instanceof Bloque be) {
+                    validarFuncionesDentroDeFuncion(be);
+                }
+            }
+
+            if (ins instanceof For f) {
+                validarFuncionesDentroDeFuncion(f.getBloque());
             }
         }
     }
 
     private void ejecutar(Instruccion ins) {
-
         if (ins instanceof Declaracion d) {
             ejecutarDeclaracion(d);
             return;
@@ -150,9 +219,7 @@ public class InterpreterVisitor {
         }
     }
 
-    private void ejecutarDeclaracion(
-        Declaracion d) {
-
+    private void ejecutarDeclaracion(Declaracion d) {
         Object valor = null;
 
         if (d.getValor() != null) {
@@ -164,8 +231,7 @@ public class InterpreterVisitor {
                 + d.getIdentificador());
         }
 
-        entorno.declarar(d.getIdentificador(),
-            new ValueWrapper(valor));
+        entorno.declarar(d.getIdentificador(), new ValueWrapper(valor));
     }
 
     private void ejecutarAsignacion(
@@ -373,14 +439,12 @@ public class InterpreterVisitor {
         Funcion funcion = funciones.get(llamada.getNombre());
 
         if (funcion == null) {
-            throw new RuntimeException(
-                "Funcion no definida: "
+            throw new RuntimeException("Funcion no definida: "
                 + llamada.getNombre());
         }
 
         if (llamada.getArgumentos().size() != funcion.getParametros().size()) {
-            throw new RuntimeException(
-                "Cantidad incorrecta de parametros en "
+            throw new RuntimeException("Cantidad incorrecta de parametros en "
                 + llamada.getNombre());
         }
 
@@ -389,13 +453,11 @@ public class InterpreterVisitor {
 
         try {
             for (int i = 0;  i < funcion.getParametros().size(); i++) {
-        
                 Parametro parametro = funcion.getParametros().get(i);
             
                 Object valor = evaluar(llamada.getArgumentos().get(i));
             
                 if (!tipoCompatible(parametro.getTipo(), valor)) {
-            
                     throw new RuntimeException( "Tipo incorrecto para parametro "
                         + parametro.getNombre());
                 }
@@ -405,7 +467,6 @@ public class InterpreterVisitor {
 
             try {
                 ejecutar(funcion.getBloque());
-
             } catch (ReturnException ex) {
                 if (!tipoCompatible( funcion.getTipoRetorno(), ex.getValor())) {
                         throw new RuntimeException( "Tipo de retorno incorrecto en "
