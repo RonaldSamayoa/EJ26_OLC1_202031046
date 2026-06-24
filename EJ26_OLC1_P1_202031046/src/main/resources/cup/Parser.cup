@@ -25,6 +25,8 @@ import com.olc1.golite.ast.stm.Decremento;
 import com.olc1.golite.ast.stm.Funcion;
 import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 import com.olc1.golite.ast.stm.Parametro;
+import com.olc1.golite.ast.stm.Switch;
+import com.olc1.golite.ast.stm.CaseSwitch;
 
 parser code {:
 
@@ -93,6 +95,10 @@ terminal ELSE;
 
 terminal FOR;
 
+terminal SWITCH;
+terminal CASE;
+terminal DEFAULT;
+
 terminal FMT;
 terminal PRINTLN;
 terminal STRCONV;
@@ -155,6 +161,10 @@ non terminal Parametro PARAMETRO;
 non terminal List LISTA_PARAMETROS;
 non terminal List LISTA_ARGUMENTOS;
 non terminal LlamadaFuncionStmt LLAMADA_FUNCION_STMT;
+non terminal Switch SWITCH_SENTENCIA;
+non terminal CaseSwitch CASE_SWITCH;
+non terminal List LISTA_CASES;
+non terminal Bloque DEFAULT_SWITCH;
 
 precedence left OR;
 precedence left AND;
@@ -210,6 +220,7 @@ SENTENCIA ::=
     | INCREMENTO_SENTENCIA:i {: RESULT = i; :}
     | DECREMENTO_SENTENCIA:d {: RESULT = d; :}
     | LLAMADA_FUNCION_STMT:l {: RESULT = l; :}
+    | SWITCH_SENTENCIA:s {: RESULT = s; :}
 
     | error PUNTO_COMA
     | error LLAVE_DER
@@ -698,4 +709,39 @@ LLAMADA_FUNCION_STMT ::=
       LLAMADA_FUNCION:f
       PUNTO_COMA_OPCIONAL
       {: RESULT =  new LlamadaFuncionStmt(f); :}
+;
+
+CASE_SWITCH ::=
+    CASE EXPRESION:e DOS_PUNTOS LISTA_SENTENCIAS:l
+    {: RESULT = new CaseSwitch(e, new Bloque(l)); :}
+;
+
+LISTA_CASES ::=
+      CASE_SWITCH:c
+      {: List<CaseSwitch> lista = new ArrayList<>();
+          lista.add(c);
+          RESULT = lista; :}
+
+    | LISTA_CASES:l
+      CASE_SWITCH:c
+      {: l.add(c);
+          RESULT = l; :}
+;
+
+DEFAULT_SWITCH ::=
+      DEFAULT DOS_PUNTOS LISTA_SENTENCIAS:l
+      {: RESULT = new Bloque(l); :}
+
+    | {: RESULT = null; :}
+;
+
+SWITCH_SENTENCIA ::=
+    SWITCH
+    EXPRESION:e
+    LLAVE_IZQ
+    LISTA_CASES:c
+    DEFAULT_SWITCH:d
+    LLAVE_DER
+
+    {: RESULT = new Switch(e, c, d); :}
 ;

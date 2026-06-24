@@ -13,6 +13,10 @@ public enum TipoToken {
     IF,
     ELSE,
 
+    SWITCH,
+    CASE,
+    DEFAULT,
+
     BREAK, 
     CONTINUE,
     RETURN,

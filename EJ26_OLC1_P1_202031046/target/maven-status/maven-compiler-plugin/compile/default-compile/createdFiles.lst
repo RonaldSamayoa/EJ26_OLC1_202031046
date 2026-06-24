@@ -1,4 +1,5 @@
 com/olc1/golite/parser/parser$CUP$parser$actions.class
+com/olc1/golite/ast/stm/Switch.class
 com/olc1/golite/Main.class
 com/olc1/golite/ui/EditorPanel.class
 com/olc1/golite/parser/parser.class
@@ -19,6 +20,7 @@ com/olc1/golite/visitor/interpreter/environment/Entorno.class
 com/olc1/golite/ast/exp/Identificador.class
 com/olc1/golite/ast/stm/Return.class
 com/olc1/golite/parser/AnalizadorSintactico.class
+com/olc1/golite/ast/stm/CaseSwitch.class
 com/olc1/golite/ui/FrameReporteTokens.class
 com/olc1/golite/ast/exp/Literal.class
 com/olc1/golite/ui/MainFrame$1.class

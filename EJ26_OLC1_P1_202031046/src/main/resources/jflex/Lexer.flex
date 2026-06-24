@@ -70,6 +70,10 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "reflect"             { return token(TipoToken.REFLECT, yytext()); }
 "TypeOf"              { return token(TipoToken.TYPEOF, yytext()); }
 
+"switch"              { return token(TipoToken.SWITCH, yytext()); }
+"case"                { return token(TipoToken.CASE, yytext()); }
+"default"             { return token(TipoToken.DEFAULT, yytext()); }
+
 /*OPERADORES COMPUESTOS*/
 "++"                   {return token(TipoToken.INCREMENTO, yytext());}
 "--"                   {return token(TipoToken.DECREMENTO, yytext());}

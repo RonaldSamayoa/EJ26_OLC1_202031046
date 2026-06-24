@@ -44,6 +44,10 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "else"       {return symbol(sym.ELSE);}
 "for"       {return symbol(sym.FOR);}
 
+"switch"      { return symbol(sym.SWITCH); }
+"case"        { return symbol(sym.CASE); }
+"default"     { return symbol(sym.DEFAULT); }
+
 "break"      { return symbol(sym.BREAK); }
 "continue"   { return symbol(sym.CONTINUE); }
 "return"     { return symbol(sym.RETURN); }

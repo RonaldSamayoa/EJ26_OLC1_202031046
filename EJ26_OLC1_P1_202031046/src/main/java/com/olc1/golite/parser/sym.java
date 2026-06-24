@@ -8,59 +8,62 @@ package com.olc1.golite.parser;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int PARENTESIS_IZQ = 42;
-  public static final int REFLECT = 38;
-  public static final int STRCONV = 35;
+  public static final int PARENTESIS_IZQ = 45;
+  public static final int REFLECT = 41;
+  public static final int STRCONV = 38;
   public static final int LITERAL_RUNE = 12;
   public static final int ENTERO = 4;
+  public static final int CASE = 34;
   public static final int DIFERENTE = 26;
-  public static final int CONTINUE = 52;
+  public static final int CONTINUE = 55;
   public static final int DOS_PUNTOS = 15;
   public static final int INT = 7;
-  public static final int PRINTLN = 34;
+  public static final int PRINTLN = 37;
   public static final int FOR = 32;
-  public static final int NOT = 48;
-  public static final int AND = 46;
-  public static final int LLAVE_IZQ = 44;
+  public static final int NOT = 51;
+  public static final int AND = 49;
+  public static final int LLAVE_IZQ = 47;
   public static final int IDENTIFICADOR = 3;
   public static final int IGUAL = 13;
-  public static final int PARSEFLOAT = 37;
-  public static final int TYPEOF = 39;
+  public static final int PARSEFLOAT = 40;
+  public static final int TYPEOF = 42;
   public static final int NIL = 29;
-  public static final int OR = 47;
+  public static final int OR = 50;
   public static final int BOOL = 10;
-  public static final int INCREMENTO = 55;
-  public static final int ATOI = 36;
-  public static final int UMENOS = 57;
+  public static final int INCREMENTO = 58;
+  public static final int ATOI = 39;
+  public static final int UMENOS = 60;
   public static final int MAS_IGUAL = 27;
   public static final int IF = 30;
   public static final int PUNTO_COMA = 14;
   public static final int IGUAL_IGUAL = 25;
   public static final int EOF = 0;
   public static final int DECIMAL = 5;
-  public static final int RETURN = 53;
-  public static final int PARENTESIS_DER = 43;
-  public static final int TRUE = 49;
-  public static final int DECREMENTO = 56;
+  public static final int RETURN = 56;
+  public static final int PARENTESIS_DER = 46;
+  public static final int TRUE = 52;
+  public static final int DECREMENTO = 59;
   public static final int error = 1;
-  public static final int COMA = 41;
+  public static final int COMA = 44;
   public static final int FLOAT64 = 8;
   public static final int CADENA = 6;
   public static final int MODULO = 20;
   public static final int MENOS = 17;
   public static final int MENOR = 22;
-  public static final int BREAK = 51;
+  public static final int BREAK = 54;
   public static final int RUNE = 11;
+  public static final int SWITCH = 33;
   public static final int MAYOR = 21;
   public static final int ELSE = 31;
-  public static final int LLAVE_DER = 45;
-  public static final int PUNTO = 40;
-  public static final int FUNC = 54;
+  public static final int LLAVE_DER = 48;
+  public static final int PUNTO = 43;
+  public static final int FUNC = 57;
+  public static final int DEFAULT = 35;
   public static final int MAYOR_IGUAL = 23;
   public static final int STRING = 9;
-  public static final int FMT = 33;
+  public static final int FMT = 36;
   public static final int MENOR_IGUAL = 24;
-  public static final int FALSE = 50;
+  public static final int FALSE = 53;
   public static final int MENOS_IGUAL = 28;
   public static final int DIVISION = 19;
   public static final int VAR = 2;
@@ -100,6 +103,9 @@ public interface sym {
   "IF",
   "ELSE",
   "FOR",
+  "SWITCH",
+  "CASE",
+  "DEFAULT",
   "FMT",
   "PRINTLN",
   "STRCONV",

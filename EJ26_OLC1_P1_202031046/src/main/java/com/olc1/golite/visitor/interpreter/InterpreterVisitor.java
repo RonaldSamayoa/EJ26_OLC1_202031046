@@ -16,6 +16,7 @@ import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.stm.Asignacion;
 import com.olc1.golite.ast.stm.Bloque;
 import com.olc1.golite.ast.stm.Break;
+import com.olc1.golite.ast.stm.CaseSwitch;
 import com.olc1.golite.ast.stm.Continue;
 import com.olc1.golite.ast.stm.Declaracion;
 import com.olc1.golite.ast.stm.Decremento;
@@ -28,6 +29,7 @@ import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 import com.olc1.golite.ast.stm.Parametro;
 import com.olc1.golite.ast.stm.Print;
 import com.olc1.golite.ast.stm.Return;
+import com.olc1.golite.ast.stm.Switch;
 import com.olc1.golite.ui.ConsolePanel;
 import com.olc1.golite.visitor.interpreter.environment.Entorno;
 import com.olc1.golite.visitor.interpreter.value.ValueWrapper;
@@ -217,6 +219,11 @@ public class InterpreterVisitor {
             ejecutarFuncion( l.getLlamada());
             return;
         }
+
+        if (ins instanceof Switch s) {
+            ejecutarSwitch(s);
+            return;
+        }
     }
 
     private void ejecutarDeclaracion(Declaracion d) {
@@ -234,69 +241,42 @@ public class InterpreterVisitor {
         entorno.declarar(d.getIdentificador(), new ValueWrapper(valor));
     }
 
-    private void ejecutarAsignacion(
-        Asignacion a) {
-        
-        System.out.println(
-                "ASIGNANDO -> " +
-                a.getIdentificador() +
-                " = " +
-                a.getValor().getClass().getSimpleName()
-            );
+    private void ejecutarAsignacion( Asignacion a) {
+        System.out.println( "ASIGNANDO -> " + a.getIdentificador() +
+                " = " + a.getValor().getClass().getSimpleName());
 
         Object valor = evaluar(a.getValor());
-        System.out.println(
-            "VALOR CALCULADO -> " + valor
-        );
+        System.out.println( "VALOR CALCULADO -> " + valor);
 
-        entorno.asignar(a.getIdentificador(),
-            new ValueWrapper(valor));
+        entorno.asignar(a.getIdentificador(),new ValueWrapper(valor));
     }
 
-    private void ejecutarPrint(
-        Print p) {
+    private void ejecutarPrint( Print p) {
+        StringBuilder salida = new StringBuilder();
 
-        StringBuilder salida =
-                new StringBuilder();
-
-        for (Expresion e :
-                p.getExpresiones()) {
-
-            Object valor =
-                    evaluar(e);
+        for (Expresion e : p.getExpresiones()) {
+            Object valor = evaluar(e);
 
             salida.append(valor);
             salida.append(" ");
         }
 
-        consola.append(
-            salida.toString()
-        );
+        consola.append(salida.toString());
     }
 
     private void ejecutarIf(If i) {
-
-        Object condicion =
-                evaluar(i.getCondicion());
+        Object condicion = evaluar(i.getCondicion());
     
         if (!(condicion instanceof Boolean)) {
-            throw new RuntimeException(
-                "La condicion del if debe ser booleana"
-            );
+            throw new RuntimeException("La condicion del if debe ser booleana");
         }
     
         if ((Boolean) condicion) {
-    
-            ejecutar(
-                i.getBloqueThen()
-            );
+            ejecutar(i.getBloqueThen());
     
         } else {
-    
             if (i.getBloqueElse() != null) {
-                ejecutar(
-                    i.getBloqueElse()
-                );
+                ejecutar(i.getBloqueElse());
             }
         }
     }
@@ -306,9 +286,7 @@ public class InterpreterVisitor {
         entorno = new Entorno(anterior);
     
         try {
-    
-            for (Instruccion ins :
-                    b.getInstrucciones()) {
+            for (Instruccion ins : b.getInstrucciones()) {
                 ejecutar(ins);
             }
     
@@ -317,56 +295,30 @@ public class InterpreterVisitor {
         }
     }
 
-    private void ejecutarIncremento(
-        Incremento i) {
+    private void ejecutarIncremento( Incremento i) {
 
-        ValueWrapper valor =
-                entorno.obtener(
-                        i.getIdentificador());
+        ValueWrapper valor = entorno.obtener(i.getIdentificador());
 
         if (valor == null) {
-
-            throw new RuntimeException(
-                "Variable no definida: "
-                + i.getIdentificador()
-            );
+            throw new RuntimeException("Variable no definida: " + i.getIdentificador());
         }
 
-        Number numero =
-                (Number) valor.getValor();
+        Number numero = (Number) valor.getValor();
 
-        entorno.asignar(
-            i.getIdentificador(),
-            new ValueWrapper(
-                numero.doubleValue() + 1
-            )
-        );
+        entorno.asignar(i.getIdentificador(), new ValueWrapper(numero.doubleValue() + 1));
     }
 
-    private void ejecutarDecremento(
-        Decremento d) {
+    private void ejecutarDecremento(Decremento d) {
 
-        ValueWrapper valor =
-                entorno.obtener(
-                        d.getIdentificador());
+        ValueWrapper valor = entorno.obtener( d.getIdentificador());
 
         if (valor == null) {
-
-            throw new RuntimeException(
-                "Variable no definida: "
-                + d.getIdentificador()
-            );
+            throw new RuntimeException("Variable no definida: " + d.getIdentificador());
         }
 
-        Number numero =
-                (Number) valor.getValor();
+        Number numero = (Number) valor.getValor();
 
-        entorno.asignar(
-            d.getIdentificador(),
-            new ValueWrapper(
-                numero.doubleValue() - 1
-            )
-        );
+        entorno.asignar(d.getIdentificador(), new ValueWrapper(numero.doubleValue() - 1 ));
     }
 
     private void ejecutarBreak(Break b) {
@@ -384,17 +336,13 @@ public class InterpreterVisitor {
         entorno = new Entorno(anterior);
     
         try {
-    
             if (f.getInicializacion() != null) {
                 ejecutar(f.getInicializacion());
             }
     
             while (true) {
-    
                 if (f.getCondicion() != null) {
-    
-                    Object condicion =
-                            evaluar(f.getCondicion());
+                    Object condicion =  evaluar(f.getCondicion());
     
                     if (!(condicion instanceof Boolean)) {
                         throw new RuntimeException(
@@ -412,7 +360,6 @@ public class InterpreterVisitor {
                     ejecutar(f.getBloque());
                 
                 } catch (ContinueException ex) {
-                
                     if (f.getActualizacion() != null) {
                         ejecutar(f.getActualizacion());
                     }
@@ -420,7 +367,6 @@ public class InterpreterVisitor {
                     continue;
                 
                 } catch (BreakException ex) {
-                
                     break;
                 }
     
@@ -430,7 +376,6 @@ public class InterpreterVisitor {
             }
     
         } finally {
-    
             entorno = anterior;
         }
     }
@@ -500,15 +445,10 @@ public class InterpreterVisitor {
 
         if (exp instanceof Identificador id) {
 
-            ValueWrapper valor =
-                    entorno.obtener(
-                            id.getNombre());
+            ValueWrapper valor = entorno.obtener(id.getNombre());
 
             if (valor == null) {
-                throw new RuntimeException(
-                    "Variable no definida: "
-                    + id.getNombre()
-                );
+                throw new RuntimeException("Variable no definida: " + id.getNombre());
             }
 
             return valor.getValor();
@@ -536,118 +476,85 @@ public class InterpreterVisitor {
     private Object evaluarOperacionBinaria(
         OperacionBinaria op) {
 
-        Object izq =
-                evaluar(op.getIzquierda());
+        Object izq = evaluar(op.getIzquierda());
 
-        Object der =
-                evaluar(op.getDerecha());
+        Object der = evaluar(op.getDerecha());
 
-        String operador =
-                op.getOperador();
+        String operador = op.getOperador();
 
         switch (operador) {
-
             case "+":
-
-                if (izq instanceof String
-                        || der instanceof String) {
-
-                    return String.valueOf(izq)
-                            + String.valueOf(der);
+                if (izq instanceof String || der instanceof String) {
+                    return String.valueOf(izq) + String.valueOf(der);
                 }
 
-                return ((Number) izq).doubleValue()
-                        + ((Number) der).doubleValue();
+                if (izq instanceof Double || der instanceof Double) {
+                    return ((Number) izq).doubleValue() + ((Number) der).doubleValue();
+                }
+
+                return ((Number) izq).intValue() + ((Number) der).intValue();
 
             case "-":
-
-                return ((Number) izq).doubleValue()
-                        - ((Number) der).doubleValue();
+                if (izq instanceof Double || der instanceof Double) {
+                    return ((Number) izq).doubleValue() - ((Number) der).doubleValue();
+                }
+                return ((Number) izq).intValue() - ((Number) der).intValue();
 
             case "*":
-
-                return ((Number) izq).doubleValue()
-                        * ((Number) der).doubleValue();
+                if (izq instanceof Double || der instanceof Double) {
+                    return ((Number) izq).doubleValue() * ((Number) der).doubleValue();
+                }
+                return ((Number) izq).intValue() * ((Number) der).intValue();
 
             case "/":
-
                 return ((Number) izq).doubleValue()
                         / ((Number) der).doubleValue();
 
             case "%":
-
-                return ((Number) izq).intValue()
-                        % ((Number) der).intValue();
+                return ((Number) izq).intValue()%((Number) der).intValue();
 
             case ">":
-
-                return ((Number) izq).doubleValue()
-                        >
-                        ((Number) der).doubleValue();
+                return ((Number) izq).doubleValue()>((Number) der).doubleValue();
 
             case "<":
-
-                return ((Number) izq).doubleValue()
-                        <
-                        ((Number) der).doubleValue();
+                return ((Number) izq).doubleValue()<((Number) der).doubleValue();
 
             case ">=":
 
-                return ((Number) izq).doubleValue()
-                        >=
-                        ((Number) der).doubleValue();
+                return ((Number) izq).doubleValue()>=((Number) der).doubleValue();
 
             case "<=":
 
-                return ((Number) izq).doubleValue()
-                        <=
-                        ((Number) der).doubleValue();
+                return ((Number) izq).doubleValue()<= ((Number) der).doubleValue();
 
             case "==":
-
                 if (izq instanceof Number && der instanceof Number) {
                     return ((Number) izq).doubleValue()
                             == ((Number) der).doubleValue();
                 }
-
                 return java.util.Objects.equals(izq, der);
 
             case "!=":
-
                 if (izq instanceof Number && der instanceof Number) {
                     return ((Number) izq).doubleValue()
                             != ((Number) der).doubleValue();
                 }
-
                 return !java.util.Objects.equals(izq, der);
 
             case "&&":
-
-                return ((Boolean) izq)
-                        &&
-                        ((Boolean) der);
+                return ((Boolean) izq) && ((Boolean) der);
 
             case "||":
-
-                return ((Boolean) izq)
-                        ||
-                        ((Boolean) der);
+                return ((Boolean) izq) || ((Boolean) der);
         }
 
-        throw new RuntimeException(
-            "Operador no soportado: "
-            + operador
-        );
+        throw new RuntimeException("Operador no soportado: " + operador );
     }
 
-    private Object evaluarOperacionUnaria(
-        OperacionUnaria op) {
-
-        Object valor =
-                evaluar(op.getExpresion());
+    private Object evaluarOperacionUnaria( OperacionUnaria op) {
+        Object valor = evaluar(op.getExpresion());
 
         switch (op.getOperador()) {
-
             case "!":
                 return !((Boolean) valor);
 
@@ -656,42 +563,28 @@ public class InterpreterVisitor {
                         .doubleValue();
         }
 
-        throw new RuntimeException(
-            "Operador unario no soportado"
-        );
+        throw new RuntimeException( "Operador unario no soportado" );
     }
 
     private Object evaluarFuncionEmbebida(
         FuncionEmbebida f) {
-            System.out.println(
-                "FUNCION -> " + f.getNombre()
-            );    
-        Object valor =
-                evaluar(
-                    f.getArgumento()
-                );
+            System.out.println( "FUNCION -> " + f.getNombre());    
+        Object valor = evaluar(f.getArgumento());
 
         switch (f.getNombre().toLowerCase()) {
-
             case "atoi":
-               return Integer.parseInt(
-                        valor.toString());
+               return Integer.parseInt(valor.toString());
                 
             case "parsefloat":
-                return Double.parseDouble(
-                        valor.toString());
+                return Double.parseDouble( valor.toString());
                 
             case "typeof":
                 if (valor == null) {
                     return "nil";
                 }
-                
                 return valor.getClass().getSimpleName();
         }
-
-        throw new RuntimeException(
-            "Funcion embebida no soportada"
-        );
+        throw new RuntimeException("Funcion embebida no soportada");
     }
 
     private boolean tipoCompatible(String tipo, Object valor) {
@@ -715,7 +608,23 @@ public class InterpreterVisitor {
             case "rune":
                 return valor instanceof Character;
         }
-
         return true;
+    }
+
+    private void ejecutarSwitch(Switch s) {
+        Object valorSwitch = evaluar(s.getExpresion());
+
+        for (CaseSwitch caso : s.getCasos()) {
+            Object valorCase = evaluar(caso.getValor());
+
+            if (java.util.Objects.equals(valorSwitch, valorCase)) {
+                ejecutar(caso.getBloque());
+                return;
+            }
+        }
+
+        if (s.getBloqueDefault() != null) {
+            ejecutar(s.getBloqueDefault());
+        }
     }
 }
