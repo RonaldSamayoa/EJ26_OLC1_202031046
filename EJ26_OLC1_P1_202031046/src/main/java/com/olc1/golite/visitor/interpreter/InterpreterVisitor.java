@@ -1,7 +1,9 @@
 package com.olc1.golite.visitor.interpreter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.olc1.golite.ast.exp.Expresion;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
@@ -34,6 +36,7 @@ public class InterpreterVisitor {
     private Entorno entorno;
     private ConsolePanel consola;
     private Map<String, Funcion> funciones;
+    private Set<String> variablesGlobales = new HashSet<>();
 
     public InterpreterVisitor(ConsolePanel consola) {
         this.consola = consola;
@@ -42,13 +45,32 @@ public class InterpreterVisitor {
     }
 
     public void ejecutar(List<Instruccion> instrucciones) {
+        variablesGlobales.clear();
+
+        for (Instruccion ins : instrucciones) {
+            if (ins instanceof Declaracion d) {
+                variablesGlobales.add(d.getIdentificador());
+            }
+        }
+
         for (Instruccion ins : instrucciones) {
             if (ins instanceof Funcion f) {
-                if (funciones.containsKey(
-                        f.getNombre())) {
-    
-                    throw new RuntimeException(
-                        "La funcion ya existe: "+ f.getNombre());
+                if (funciones.containsKey( f.getNombre())) {
+                    throw new RuntimeException("La funcion ya existe: "+ f.getNombre());
+                }
+
+                if (variablesGlobales.contains(f.getNombre())) {
+                    throw new RuntimeException( "Ya existe una variable llamada "
+                        + f.getNombre());
+                }
+                
+                HashSet<String> nombres = new HashSet<>();
+
+                for (Parametro p : f.getParametros()) {
+                    if (!nombres.add( p.getNombre())) {
+                        throw new RuntimeException("Parametro repetido: "
+                            + p.getNombre() + " en funcion " + f.getNombre());
+                    }
                 }
                 funciones.put(f.getNombre(), f);
             }
@@ -137,10 +159,13 @@ public class InterpreterVisitor {
             valor = evaluar(d.getValor());
         }
 
-        entorno.declarar(
-            d.getIdentificador(),
-            new ValueWrapper(valor)
-        );
+        if (funciones.containsKey(d.getIdentificador())) {
+            throw new RuntimeException("Ya existe una funcion llamada "
+                + d.getIdentificador());
+        }
+
+        entorno.declarar(d.getIdentificador(),
+            new ValueWrapper(valor));
     }
 
     private void ejecutarAsignacion(
