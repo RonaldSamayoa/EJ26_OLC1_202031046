@@ -10,6 +10,7 @@ import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.SliceLiteral;
+import com.olc1.golite.ast.exp.AccesoSlice;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -169,6 +170,7 @@ non terminal CaseSwitch CASE_SWITCH;
 non terminal List LISTA_CASES;
 non terminal Bloque DEFAULT_SWITCH;
 non terminal SliceLiteral SLICE_LITERAL;
+non terminal AccesoSlice ACCESO_SLICE;
 
 precedence left OR;
 precedence left AND;
@@ -396,6 +398,9 @@ VALOR ::=
     
     | SLICE_LITERAL:s
       {: RESULT = s; :}
+
+    | ACCESO_SLICE:a
+      {: RESULT = a; :}
 ;
 
 EXPRESION ::=
@@ -772,4 +777,13 @@ SLICE_LITERAL ::=
       LLAVE_DER
 
       {: RESULT = new SliceLiteral(l); :}
+;
+
+ACCESO_SLICE ::=
+      IDENTIFICADOR:id
+      CORCHETE_IZQ
+      EXPRESION:e
+      CORCHETE_DER
+
+      {: RESULT = new AccesoSlice(id.toString(), e); :}
 ;

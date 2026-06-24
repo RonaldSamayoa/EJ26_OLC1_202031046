@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.olc1.golite.ast.exp.AccesoSlice;
 import com.olc1.golite.ast.exp.Expresion;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.Identificador;
@@ -475,6 +476,10 @@ public class InterpreterVisitor {
             return evaluarSliceLiteral(s);
         }
 
+        if (exp instanceof AccesoSlice a) {
+            return evaluarAccesoSlice(a);
+        }
+
         return null;
     }
 
@@ -640,5 +645,28 @@ public class InterpreterVisitor {
             valores.add( evaluar(e));
         }
         return valores;
+    }
+
+    private Object evaluarAccesoSlice(AccesoSlice acceso) {
+        ValueWrapper wrapper = entorno.obtener(acceso.getIdentificador());
+
+        if (wrapper == null) {
+            throw new RuntimeException("Variable no definida: "  + acceso.getIdentificador());
+        }
+
+        Object valor = wrapper.getValor();
+
+        if (!(valor instanceof List<?> lista)) {
+            throw new RuntimeException( acceso.getIdentificador()  + " no es un slice");
+        }
+
+        Object indiceObj = evaluar(acceso.getIndice());
+
+        int indice = ((Number) indiceObj).intValue();
+
+        if (indice < 0 || indice >= lista.size()) {
+            throw new RuntimeException("Indice fuera de rango");
+        }
+        return lista.get(indice);
     }
 }

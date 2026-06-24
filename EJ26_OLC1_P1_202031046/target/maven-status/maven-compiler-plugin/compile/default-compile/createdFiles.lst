@@ -11,6 +11,7 @@ com/olc1/golite/lexer/Lexer.class
 com/olc1/golite/semantic/SemanticAnalyzer.class
 com/olc1/golite/errors/ErrorCompilador.class
 com/olc1/golite/ast/exp/OperacionBinaria.class
+com/olc1/golite/ast/exp/AccesoSlice.class
 com/olc1/golite/ast/stm/Decremento.class
 com/olc1/golite/ast/stm/Bloque.class
 com/olc1/golite/ast/exp/Expresion.class
