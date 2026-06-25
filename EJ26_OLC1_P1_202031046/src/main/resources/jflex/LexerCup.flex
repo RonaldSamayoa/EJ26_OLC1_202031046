@@ -62,6 +62,9 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "bool"       {return symbol(sym.BOOL);}
 "rune"          {return symbol(sym.RUNE); }
 
+"len"       { return symbol(sym.LEN); }
+"append"    { return symbol(sym.APPEND);}
+
 "&&"       {return symbol(sym.AND);}
 "||"       {return symbol(sym.OR);}
 "!"       {return symbol(sym.NOT);}

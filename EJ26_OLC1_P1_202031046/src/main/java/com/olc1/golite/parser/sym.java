@@ -25,6 +25,7 @@ public interface sym {
   public static final int AND = 51;
   public static final int LLAVE_IZQ = 47;
   public static final int IDENTIFICADOR = 3;
+  public static final int APPEND = 64;
   public static final int IGUAL = 13;
   public static final int PARSEFLOAT = 40;
   public static final int TYPEOF = 42;
@@ -62,6 +63,7 @@ public interface sym {
   public static final int CORCHETE_IZQ = 49;
   public static final int DEFAULT = 35;
   public static final int MAYOR_IGUAL = 23;
+  public static final int LEN = 63;
   public static final int STRING = 9;
   public static final int FMT = 36;
   public static final int MENOR_IGUAL = 24;
@@ -134,7 +136,9 @@ public interface sym {
   "FUNC",
   "INCREMENTO",
   "DECREMENTO",
-  "UMENOS"
+  "UMENOS",
+  "LEN",
+  "APPEND"
   };
 }
 

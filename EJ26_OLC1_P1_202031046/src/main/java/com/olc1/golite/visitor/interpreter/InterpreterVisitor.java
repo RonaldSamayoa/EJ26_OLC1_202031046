@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.olc1.golite.ast.exp.AccesoSlice;
+import com.olc1.golite.ast.exp.Append;
 import com.olc1.golite.ast.exp.Expresion;
 import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.Identificador;
+import com.olc1.golite.ast.exp.Len;
 import com.olc1.golite.ast.exp.Literal;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.OperacionBinaria;
@@ -480,6 +482,14 @@ public class InterpreterVisitor {
             return evaluarAccesoSlice(a);
         }
 
+        if (exp instanceof Len l) {
+            return evaluarLen(l);
+        }
+
+        if (exp instanceof Append a) {
+            return evaluarAppend(a);
+        }
+
         return null;
     }
 
@@ -668,5 +678,33 @@ public class InterpreterVisitor {
             throw new RuntimeException("Indice fuera de rango");
         }
         return lista.get(indice);
+    }
+
+    private Object evaluarLen( Len len) {
+        Object valor = evaluar(len.getExpresion());
+
+        if (valor instanceof List<?> lista) {
+            return lista.size();
+        }
+
+        if (valor instanceof String s) {
+            return s.length();
+        }
+        throw new RuntimeException("len solo puede aplicarse a slices o strings");
+    }
+
+    private Object evaluarAppend( Append append) {
+        Object sliceObj = evaluar( append.getSlice());
+
+        if (!(sliceObj instanceof List<?>)) {
+            throw new RuntimeException(
+                "append requiere un slice");
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Object> lista = (List<Object>) sliceObj;
+
+        lista.add( evaluar(append.getValor()));
+        return lista;
     }
 }

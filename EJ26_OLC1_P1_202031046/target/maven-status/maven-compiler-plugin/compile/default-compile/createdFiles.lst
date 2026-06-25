@@ -33,10 +33,12 @@ com/olc1/golite/ast/exp/LlamadaFuncion.class
 com/olc1/golite/ast/stm/Instruccion.class
 com/olc1/golite/symbols/TablaSimbolos.class
 com/olc1/golite/visitor/interpreter/ContinueException.class
+com/olc1/golite/ast/exp/Len.class
 com/olc1/golite/lexer/AnalizadorLexico.class
 com/olc1/golite/ui/ArchivoTab.class
 com/olc1/golite/parser/LexerCup.class
 com/olc1/golite/parser/sym.class
+com/olc1/golite/ast/exp/Append.class
 com/olc1/golite/ast/stm/Parametro.class
 com/olc1/golite/ui/FrameReporteErrores.class
 com/olc1/golite/lexer/TipoToken.class

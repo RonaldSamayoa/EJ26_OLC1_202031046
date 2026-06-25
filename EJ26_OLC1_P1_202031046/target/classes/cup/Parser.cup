@@ -11,6 +11,8 @@ import com.olc1.golite.ast.exp.FuncionEmbebida;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.SliceLiteral;
 import com.olc1.golite.ast.exp.AccesoSlice;
+import com.olc1.golite.ast.exp.Len;
+import com.olc1.golite.ast.exp.Append;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -136,6 +138,9 @@ terminal DECREMENTO;
 
 terminal UMENOS;
 
+terminal LEN;
+terminal APPEND;
+
 non terminal List INICIO;
 non terminal List LISTA_SENTENCIAS;
 non terminal Instruccion SENTENCIA;
@@ -171,6 +176,8 @@ non terminal List LISTA_CASES;
 non terminal Bloque DEFAULT_SWITCH;
 non terminal SliceLiteral SLICE_LITERAL;
 non terminal AccesoSlice ACCESO_SLICE;
+non terminal Len LEN_FUNCION;
+non terminal Append APPEND_FUNCION;
 
 precedence left OR;
 precedence left AND;
@@ -400,6 +407,12 @@ VALOR ::=
       {: RESULT = s; :}
 
     | ACCESO_SLICE:a
+      {: RESULT = a; :}
+    
+    | LEN_FUNCION:l
+      {: RESULT = l; :}
+
+    | APPEND_FUNCION:a
       {: RESULT = a; :}
 ;
 
@@ -786,4 +799,23 @@ ACCESO_SLICE ::=
       CORCHETE_DER
 
       {: RESULT = new AccesoSlice(id.toString(), e); :}
+;
+
+LEN_FUNCION ::=
+      LEN
+      PARENTESIS_IZQ
+      EXPRESION:e
+      PARENTESIS_DER
+      {:  RESULT = new Len(e); :}
+;
+
+APPEND_FUNCION ::=
+      APPEND
+      PARENTESIS_IZQ
+      EXPRESION:s
+      COMA
+      EXPRESION:v
+      PARENTESIS_DER
+
+      {: RESULT = new Append(s,v); :}
 ;

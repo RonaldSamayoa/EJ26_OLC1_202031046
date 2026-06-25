@@ -93,6 +93,9 @@ public enum TipoToken {
     INCREMENTO,
     DECREMENTO,
 
+    LEN,
+    APPEND,
+
     //especiales
     EOF,
     ERROR 
