@@ -97,6 +97,8 @@ public enum TipoToken {
     APPEND,
     SLICES,
     INDEX,
+    STRINGS,
+    JOIN,
 
     //especiales
     EOF,

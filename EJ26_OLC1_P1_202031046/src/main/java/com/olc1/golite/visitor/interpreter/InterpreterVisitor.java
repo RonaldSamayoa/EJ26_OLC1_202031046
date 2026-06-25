@@ -18,6 +18,7 @@ import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.exp.SliceIndex;
 import com.olc1.golite.ast.exp.SliceLiteral;
+import com.olc1.golite.ast.exp.StringsJoin;
 import com.olc1.golite.ast.stm.Asignacion;
 import com.olc1.golite.ast.stm.Bloque;
 import com.olc1.golite.ast.stm.Break;
@@ -495,6 +496,10 @@ public class InterpreterVisitor {
             return evaluarSliceIndex(s);
         }
 
+        if (exp instanceof StringsJoin s) {
+            return evaluarStringsJoin(s);
+        }
+
         return null;
     }
 
@@ -727,5 +732,35 @@ public class InterpreterVisitor {
             }
         }
         return -1;
+    }
+
+    private Object evaluarStringsJoin( StringsJoin join) {
+
+        Object sliceObj = evaluar( join.getSlice());
+
+        if (!(sliceObj instanceof List<?> lista)) {
+            throw new RuntimeException( "strings.Join requiere un slice");
+        }
+
+        Object sepObj = evaluar( join.getSeparador());
+
+        if (!(sepObj instanceof String separador)) {
+            throw new RuntimeException("El separador debe ser string");
+        }
+
+        StringBuilder resultado = new StringBuilder();
+
+        for (int i = 0; i < lista.size(); i++) {
+            if (!(lista.get(i) instanceof String)) {
+                throw new RuntimeException("strings.Join solo acepta []string");
+            }
+
+            resultado.append(lista.get(i));
+
+            if (i < lista.size() - 1) {
+                resultado.append(separador);
+            }
+        }
+        return resultado.toString();
     }
 }

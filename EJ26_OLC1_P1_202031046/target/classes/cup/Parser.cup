@@ -14,6 +14,7 @@ import com.olc1.golite.ast.exp.AccesoSlice;
 import com.olc1.golite.ast.exp.Len;
 import com.olc1.golite.ast.exp.Append;
 import com.olc1.golite.ast.exp.SliceIndex;
+import com.olc1.golite.ast.exp.StringsJoin;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -143,6 +144,8 @@ terminal LEN;
 terminal APPEND;
 terminal SLICES;
 terminal INDEX;
+terminal STRINGS;
+terminal JOIN;
 
 non terminal List INICIO;
 non terminal List LISTA_SENTENCIAS;
@@ -182,6 +185,7 @@ non terminal AccesoSlice ACCESO_SLICE;
 non terminal Len LEN_FUNCION;
 non terminal Append APPEND_FUNCION;
 non terminal SliceIndex SLICES_INDEX;
+non terminal StringsJoin STRINGS_JOIN;
 
 precedence left OR;
 precedence left AND;
@@ -420,6 +424,9 @@ VALOR ::=
       {: RESULT = a; :}
 
     | SLICES_INDEX:s
+      {: RESULT = s; :}
+    
+    | STRINGS_JOIN:s
       {: RESULT = s; :}
 ;
 
@@ -838,4 +845,17 @@ SLICES_INDEX ::=
       PARENTESIS_DER
 
       {: RESULT = new SliceIndex(s, v); :}
+;
+
+STRINGS_JOIN ::=
+      STRINGS
+      PUNTO
+      JOIN
+      PARENTESIS_IZQ
+      EXPRESION:s
+      COMA
+      EXPRESION:sep
+      PARENTESIS_DER
+
+      {: RESULT =  new StringsJoin(s, sep); :}
 ;

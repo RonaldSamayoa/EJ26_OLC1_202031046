@@ -17,6 +17,7 @@ com/olc1/golite/ast/stm/Bloque.class
 com/olc1/golite/ast/exp/Expresion.class
 com/olc1/golite/ast/stm/For.class
 com/olc1/golite/ui/ConsolePanel.class
+com/olc1/golite/ast/exp/StringsJoin.class
 com/olc1/golite/ast/stm/LlamadaFuncionStmt.class
 com/olc1/golite/visitor/interpreter/environment/Entorno.class
 com/olc1/golite/ast/exp/Identificador.class

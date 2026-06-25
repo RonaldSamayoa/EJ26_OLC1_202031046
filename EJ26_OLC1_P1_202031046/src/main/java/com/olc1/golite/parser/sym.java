@@ -8,6 +8,7 @@ package com.olc1.golite.parser;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
+  public static final int STRINGS = 67;
   public static final int PARENTESIS_IZQ = 45;
   public static final int REFLECT = 41;
   public static final int STRCONV = 38;
@@ -52,6 +53,7 @@ public interface sym {
   public static final int MODULO = 20;
   public static final int MENOS = 17;
   public static final int MENOR = 22;
+  public static final int JOIN = 68;
   public static final int BREAK = 56;
   public static final int RUNE = 11;
   public static final int SWITCH = 33;
@@ -142,7 +144,9 @@ public interface sym {
   "LEN",
   "APPEND",
   "SLICES",
-  "INDEX"
+  "INDEX",
+  "STRINGS",
+  "JOIN"
   };
 }
 
