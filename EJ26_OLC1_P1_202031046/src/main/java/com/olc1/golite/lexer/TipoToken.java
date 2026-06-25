@@ -95,6 +95,8 @@ public enum TipoToken {
 
     LEN,
     APPEND,
+    SLICES,
+    INDEX,
 
     //especiales
     EOF,

@@ -10,6 +10,7 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/LlamadaFuncion.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/OperacionBinaria.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/OperacionUnaria.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/SliceIndex.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/SliceLiteral.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Asignacion.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Bloque.java

@@ -57,12 +57,14 @@ public interface sym {
   public static final int SWITCH = 33;
   public static final int MAYOR = 21;
   public static final int ELSE = 31;
+  public static final int INDEX = 66;
   public static final int LLAVE_DER = 48;
   public static final int PUNTO = 43;
   public static final int FUNC = 59;
   public static final int CORCHETE_IZQ = 49;
   public static final int DEFAULT = 35;
   public static final int MAYOR_IGUAL = 23;
+  public static final int SLICES = 65;
   public static final int LEN = 63;
   public static final int STRING = 9;
   public static final int FMT = 36;
@@ -138,7 +140,9 @@ public interface sym {
   "DECREMENTO",
   "UMENOS",
   "LEN",
-  "APPEND"
+  "APPEND",
+  "SLICES",
+  "INDEX"
   };
 }
 

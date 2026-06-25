@@ -16,6 +16,7 @@ import com.olc1.golite.ast.exp.Literal;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
 import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
+import com.olc1.golite.ast.exp.SliceIndex;
 import com.olc1.golite.ast.exp.SliceLiteral;
 import com.olc1.golite.ast.stm.Asignacion;
 import com.olc1.golite.ast.stm.Bloque;
@@ -490,6 +491,10 @@ public class InterpreterVisitor {
             return evaluarAppend(a);
         }
 
+        if (exp instanceof SliceIndex s) {
+            return evaluarSliceIndex(s);
+        }
+
         return null;
     }
 
@@ -706,5 +711,21 @@ public class InterpreterVisitor {
 
         lista.add( evaluar(append.getValor()));
         return lista;
+    }
+
+    private Object evaluarSliceIndex( SliceIndex index) {
+        Object sliceObj = evaluar( index.getSlice());
+
+        if (!(sliceObj instanceof List<?> lista)) {
+            throw new RuntimeException(  "slices.Index requiere un slice");
+        }
+
+        Object buscado = evaluar( index.getValor());
+        for (int i = 0; i < lista.size(); i++) {
+            if (java.util.Objects.equals( lista.get(i), buscado)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

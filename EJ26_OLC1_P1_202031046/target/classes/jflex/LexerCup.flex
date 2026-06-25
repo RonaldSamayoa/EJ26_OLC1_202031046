@@ -64,6 +64,8 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 
 "len"       { return symbol(sym.LEN); }
 "append"    { return symbol(sym.APPEND);}
+"slices" { return symbol(sym.SLICES); }
+"Index" { return symbol(sym.INDEX); }
 
 "&&"       {return symbol(sym.AND);}
 "||"       {return symbol(sym.OR);}
