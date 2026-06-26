@@ -14,6 +14,7 @@ import com.olc1.golite.ast.exp.Identificador;
 import com.olc1.golite.ast.exp.Len;
 import com.olc1.golite.ast.exp.Literal;
 import com.olc1.golite.ast.exp.LlamadaFuncion;
+import com.olc1.golite.ast.exp.MatrizLiteral;
 import com.olc1.golite.ast.exp.OperacionBinaria;
 import com.olc1.golite.ast.exp.OperacionUnaria;
 import com.olc1.golite.ast.exp.SliceIndex;
@@ -500,6 +501,10 @@ public class InterpreterVisitor {
             return evaluarStringsJoin(s);
         }
 
+        if (exp instanceof MatrizLiteral m) {
+            return evaluarMatriz(m);
+        }
+
         return null;
     }
 
@@ -707,8 +712,7 @@ public class InterpreterVisitor {
         Object sliceObj = evaluar( append.getSlice());
 
         if (!(sliceObj instanceof List<?>)) {
-            throw new RuntimeException(
-                "append requiere un slice");
+            throw new RuntimeException( "append requiere un slice");
         }
 
         @SuppressWarnings("unchecked")
@@ -735,7 +739,6 @@ public class InterpreterVisitor {
     }
 
     private Object evaluarStringsJoin( StringsJoin join) {
-
         Object sliceObj = evaluar( join.getSlice());
 
         if (!(sliceObj instanceof List<?> lista)) {
@@ -762,5 +765,15 @@ public class InterpreterVisitor {
             }
         }
         return resultado.toString();
+    }
+
+    private Object evaluarMatriz( MatrizLiteral matriz) {
+        ArrayList<Object> resultado = new ArrayList<>();
+
+        for (SliceLiteral fila : matriz.getFilas()) {
+            resultado.add(evaluarSliceLiteral(fila));
+        }
+
+        return resultado;
     }
 }

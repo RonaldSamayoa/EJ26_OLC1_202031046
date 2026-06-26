@@ -15,6 +15,7 @@ import com.olc1.golite.ast.exp.Len;
 import com.olc1.golite.ast.exp.Append;
 import com.olc1.golite.ast.exp.SliceIndex;
 import com.olc1.golite.ast.exp.StringsJoin;
+import com.olc1.golite.ast.exp.MatrizLiteral;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -186,6 +187,9 @@ non terminal Len LEN_FUNCION;
 non terminal Append APPEND_FUNCION;
 non terminal SliceIndex SLICES_INDEX;
 non terminal StringsJoin STRINGS_JOIN;
+non terminal MatrizLiteral MATRIZ_LITERAL;
+non terminal List<SliceLiteral> LISTA_FILAS;
+non terminal SliceLiteral FILA_MATRIZ;
 
 precedence left OR;
 precedence left AND;
@@ -428,6 +432,9 @@ VALOR ::=
     
     | STRINGS_JOIN:s
       {: RESULT = s; :}
+
+    | MATRIZ_LITERAL:m
+      {: RESULT = m; :}
 ;
 
 EXPRESION ::=
@@ -858,4 +865,37 @@ STRINGS_JOIN ::=
       PARENTESIS_DER
 
       {: RESULT =  new StringsJoin(s, sep); :}
+;
+
+FILA_MATRIZ ::=
+      LLAVE_IZQ
+      LISTA_EXPRESIONES:l
+      LLAVE_DER
+
+      {:  RESULT = new SliceLiteral(l); :}
+;
+
+LISTA_FILAS ::=
+      FILA_MATRIZ:f
+
+      {: List<SliceLiteral> lista = new ArrayList<>();
+          lista.add(f);
+          RESULT = lista; :}
+
+    | LISTA_FILAS:l
+      COMA
+      FILA_MATRIZ:f
+
+      {:  l.add(f);
+          RESULT = l; :}
+;
+
+MATRIZ_LITERAL ::=
+      CORCHETE_IZQ
+      CORCHETE_DER
+      TIPO:t
+      LLAVE_IZQ
+      LISTA_FILAS:f
+      LLAVE_DER
+      {: RESULT = new MatrizLiteral(f); :}
 ;
