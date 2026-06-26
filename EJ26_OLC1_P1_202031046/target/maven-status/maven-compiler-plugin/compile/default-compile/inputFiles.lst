@@ -1,5 +1,6 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/Main.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/ASTNode.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/AccesoMatriz.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/AccesoSlice.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/Append.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/Expresion.java

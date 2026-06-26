@@ -16,6 +16,7 @@ import com.olc1.golite.ast.exp.Append;
 import com.olc1.golite.ast.exp.SliceIndex;
 import com.olc1.golite.ast.exp.StringsJoin;
 import com.olc1.golite.ast.exp.MatrizLiteral;
+import com.olc1.golite.ast.exp.AccesoMatriz;
 
 import com.olc1.golite.ast.stm.Instruccion;
 import com.olc1.golite.ast.stm.Declaracion;
@@ -190,6 +191,7 @@ non terminal StringsJoin STRINGS_JOIN;
 non terminal MatrizLiteral MATRIZ_LITERAL;
 non terminal List<SliceLiteral> LISTA_FILAS;
 non terminal SliceLiteral FILA_MATRIZ;
+non terminal AccesoMatriz ACCESO_MATRIZ;
 
 precedence left OR;
 precedence left AND;
@@ -218,15 +220,13 @@ INICIO ::=
 
 LISTA_SENTENCIAS ::=
       SENTENCIA:s
-      {:
-          List<Instruccion> lista = new ArrayList<>();
+      {: List<Instruccion> lista = new ArrayList<>();
           lista.add(s);
           RESULT = lista;
       :}
 
     | LISTA_SENTENCIAS:l SENTENCIA:s
-      {:
-          l.add(s);
+      {: l.add(s);
           RESULT = l;
       :}
 ;
@@ -256,38 +256,26 @@ SENTENCIA ::=
 
 IF_SENTENCIA ::=
       IF EXPRESION:c BLOQUE:t
-      {:
-          RESULT = new If(c, t, null);
-      :}
+      {: RESULT = new If(c, t, null); :}
 
     | IF EXPRESION:c BLOQUE:t
       ELSE BLOQUE:e
-      {:
-          RESULT = new If(c, t, e);
-      :}
+      {: RESULT = new If(c, t, e); :}
 
     | IF EXPRESION:c BLOQUE:t
       ELSE IF_SENTENCIA:e
-      {:
-          RESULT = new If(c, t, e);
-      :}
+      {:  RESULT = new If(c, t, e); :}
 ;
 
 FOR_SENTENCIA ::=
       FOR EXPRESION:c BLOQUE:b
-      {:
-          RESULT = new For(null, c,null, b);
-      :}
+      {: RESULT = new For(null, c,null, b); :}
 
     | FOR BLOQUE:b
-      {:
-          RESULT = new For(null,null,null,b);
-      :}
+      {: RESULT = new For(null,null,null,b); :}
 
     | FOR_CLASICO:f
-      {:
-          RESULT = f;
-      :}
+      {:  RESULT = f; :}
 ;
 
 BREAK_SENTENCIA ::=
@@ -302,63 +290,37 @@ CONTINUE_SENTENCIA ::=
 
 INCREMENTO_SENTENCIA ::=
     IDENTIFICADOR:id INCREMENTO PUNTO_COMA_OPCIONAL
-    {:
-        RESULT = new Incremento(id.toString());
-    :}
+    {:  RESULT = new Incremento(id.toString()); :}
 ;
 
 DECREMENTO_SENTENCIA ::=
     IDENTIFICADOR:id DECREMENTO PUNTO_COMA_OPCIONAL
-    {:
-        RESULT = new Decremento(id.toString());
-    :}
+    {: RESULT = new Decremento(id.toString());  :}
 ;
 
 DECLARACION ::=
       VAR IDENTIFICADOR:id IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Declaracion(id.toString(), e);
-      :}
+      {: RESULT = new Declaracion(id.toString(), e); :}
 
     | VAR IDENTIFICADOR:id TIPO IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Declaracion(id.toString(), e);
-      :}
+      {: RESULT = new Declaracion(id.toString(), e);  :}
 
     | VAR IDENTIFICADOR:id TIPO PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Declaracion( id.toString(), null);
-      :}
+      {: RESULT = new Declaracion( id.toString(), null); :}
 
     | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Declaracion(id.toString(), e);
-      :}
+      {: RESULT = new Declaracion(id.toString(), e); :}
 ;
 
 ASIGNACION ::=
       IDENTIFICADOR:id IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Asignacion(id.toString(), e);
-      :}
+      {: RESULT = new Asignacion(id.toString(), e); :}
 
     | IDENTIFICADOR:id MAS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Asignacion(
-              id.toString(),
-              new OperacionBinaria(
-                  new Identificador(id.toString()),
-                  "+", e ) );
-      :}
+      {: RESULT = new Asignacion( id.toString(), new OperacionBinaria(  new Identificador(id.toString()), "+", e ) ); :}
 
     | IDENTIFICADOR:id MENOS_IGUAL EXPRESION:e PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Asignacion(
-            id.toString(),
-            new OperacionBinaria(
-                new Identificador(id.toString()),
-                "-", e) );
-      :}
+      {: RESULT = new Asignacion( id.toString(), new OperacionBinaria( new Identificador(id.toString()),  "-", e) ); :}
 ;
 
 PRINT ::=
@@ -367,23 +329,17 @@ PRINT ::=
       LISTA_EXPRESIONES:l
       PARENTESIS_DER
       PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Print(l);
-      :}
+      {: RESULT = new Print(l); :}
 
     | FMT PUNTO PRINTLN
       PARENTESIS_IZQ
       PARENTESIS_DER
       PUNTO_COMA_OPCIONAL
-      {:
-          RESULT = new Print(
-              new ArrayList<Expresion>()
-          );
-      :}
+      {: RESULT = new Print( new ArrayList<Expresion>() ); :}
 ;
 
 VALOR ::=
-      ENTERO:e
+    ENTERO:e
       {: RESULT = new Literal(Integer.parseInt(e.toString())); :}
 
     | DECIMAL:d
@@ -420,6 +376,9 @@ VALOR ::=
 
     | ACCESO_SLICE:a
       {: RESULT = a; :}
+
+    | ACCESO_MATRIZ:m
+      {: RESULT = m; :}
     
     | LEN_FUNCION:l
       {: RESULT = l; :}
@@ -487,53 +446,29 @@ EXPRESION ::=
       {: RESULT = new OperacionUnaria("!",e); :}
 
     | MENOS EXPRESION:e
-        {:
-            RESULT = new OperacionUnaria("-", e);
-        :}
+        {:  RESULT = new OperacionUnaria("-", e); :}
 ;
 
 BLOQUE ::=
       LLAVE_IZQ LLAVE_DER
-      {:
-          RESULT = new Bloque(
-              new ArrayList<Instruccion>()
-          );
-      :}
+      {: RESULT = new Bloque(new ArrayList<Instruccion>()  ); :}
 
     | LLAVE_IZQ LISTA_SENTENCIAS:l LLAVE_DER
-      {:
-          RESULT = new Bloque(l);
-      :}
+      {:  RESULT = new Bloque(l);  :}
 ;
 
 FUNCION_EMBEBIDA ::=
-
       STRCONV PUNTO ATOI
       PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
-      {:
-          RESULT = new FuncionEmbebida(
-              "atoi",
-              e
-          );
-      :}
+      {: RESULT = new FuncionEmbebida("atoi",  e ); :}
 
     | STRCONV PUNTO PARSEFLOAT
       PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
-      {:
-          RESULT = new FuncionEmbebida(
-              "parsefloat",
-              e
-          );
-      :}
+      {: RESULT = new FuncionEmbebida( "parsefloat", e); :}
 
     | REFLECT PUNTO TYPEOF
       PARENTESIS_IZQ EXPRESION:e PARENTESIS_DER
-      {:
-          RESULT = new FuncionEmbebida(
-              "typeof",
-              e
-          );
-      :}
+      {: RESULT = new FuncionEmbebida( "typeof", e ); :}
 ;
 
 TIPO ::=
@@ -597,62 +532,32 @@ FOR_CLASICO ::=
     ACTUALIZACION_FOR:a
     BLOQUE:b
 
-    {:
-        RESULT = new For(i, c, a, b);
-    :}
+    {:  RESULT = new For(i, c, a, b); :}
 ;
 
 INICIALIZACION_FOR ::=
       IDENTIFICADOR:id IGUAL EXPRESION:e
-      {:
-          RESULT = new Asignacion(id.toString(),e);
-      :}
+      {:  RESULT = new Asignacion(id.toString(),e); :}
 
     | IDENTIFICADOR:id DOS_PUNTOS IGUAL EXPRESION:e
-      {:
-          RESULT = new Declaracion(id.toString(),e);
-      :}
+      {: RESULT = new Declaracion(id.toString(),e); :}
 ;
 
 ACTUALIZACION_FOR ::=
       IDENTIFICADOR:id IGUAL EXPRESION:e
-      {:
-          RESULT = new Asignacion(id.toString(),e);
-      :}
+      {: RESULT = new Asignacion(id.toString(),e); :}
 
     | IDENTIFICADOR:id MAS_IGUAL EXPRESION:e
-        {:
-            RESULT = new Asignacion(
-                id.toString(),
-                new OperacionBinaria(
-                    new Identificador(id.toString()),
-                    "+",
-                    e
-                )
-            );
-        :}
+        {: RESULT = new Asignacion(  id.toString(),  new OperacionBinaria( new Identificador(id.toString()), "+", e  ) );  :}
 
     | IDENTIFICADOR:id MENOS_IGUAL EXPRESION:e
-        {:
-            RESULT = new Asignacion(
-                id.toString(),
-                new OperacionBinaria(
-                    new Identificador(id.toString()),
-                    "-",
-                    e
-                )
-            );
-        :}
+        {: RESULT = new Asignacion( id.toString(), new OperacionBinaria( new Identificador(id.toString()), "-", e  ) ); :}
 
     | IDENTIFICADOR:id INCREMENTO
-      {:
-          RESULT = new Incremento(id.toString());
-      :}
+      {: RESULT = new Incremento(id.toString()); :}
 
     | IDENTIFICADOR:id DECREMENTO
-      {:
-          RESULT = new Decremento(id.toString());
-      :}
+      {: RESULT = new Decremento(id.toString()); :}
 ;
 
 RETURN_SENTENCIA ::=
@@ -662,9 +567,7 @@ RETURN_SENTENCIA ::=
 
 PARAMETRO ::=
       IDENTIFICADOR:id TIPO:t
-      {:
-          RESULT = new Parametro( id.toString(), t.toString());
-      :}
+      {: RESULT = new Parametro( id.toString(), t.toString()); :}
 ;
 
 LISTA_PARAMETROS ::=
@@ -690,9 +593,7 @@ FUNCION_DECLARACION ::=
       PARENTESIS_IZQ
       PARENTESIS_DER
       BLOQUE:b
-      {:
-          RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), null, b);
-      :}
+      {: RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), null, b);  :}
 
     | FUNC
       IDENTIFICADOR:id
@@ -700,9 +601,7 @@ FUNCION_DECLARACION ::=
       LISTA_PARAMETROS:p
       PARENTESIS_DER
       BLOQUE:b
-      {:
-          RESULT = new Funcion( id.toString(), p, null, b);
-      :}
+      {: RESULT = new Funcion( id.toString(), p, null, b); :}
 
     | FUNC
       IDENTIFICADOR:id
@@ -710,9 +609,7 @@ FUNCION_DECLARACION ::=
       PARENTESIS_DER
       TIPO:t
       BLOQUE:b
-      {:
-          RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), t.toString(), b);
-      :}
+      {: RESULT = new Funcion(id.toString(), new ArrayList<Parametro>(), t.toString(), b); :}
 
     | FUNC
       IDENTIFICADOR:id
@@ -721,27 +618,20 @@ FUNCION_DECLARACION ::=
       PARENTESIS_DER
       TIPO:t
       BLOQUE:b
-      {:
-          RESULT = new Funcion(id.toString(), p, t.toString(), b);
-      :}
+      {: RESULT = new Funcion(id.toString(), p, t.toString(), b); :}
 ;
 
 LLAMADA_FUNCION ::=
       IDENTIFICADOR:id
       PARENTESIS_IZQ
       PARENTESIS_DER
-      {:
-          RESULT =
-              new LlamadaFuncion(id.toString(), new ArrayList<Expresion>());
-      :}
+      {: RESULT =  new LlamadaFuncion(id.toString(), new ArrayList<Expresion>()); :}
 
     | IDENTIFICADOR:id
       PARENTESIS_IZQ
       LISTA_ARGUMENTOS:a
       PARENTESIS_DER
-      {:
-          RESULT =  new LlamadaFuncion(id.toString(), a);
-      :}
+      {:  RESULT =  new LlamadaFuncion(id.toString(), a); :}
 ;
 
 LISTA_ARGUMENTOS ::=
@@ -898,4 +788,18 @@ MATRIZ_LITERAL ::=
       LISTA_FILAS:f
       LLAVE_DER
       {: RESULT = new MatrizLiteral(f); :}
+;
+
+ACCESO_MATRIZ ::=
+    IDENTIFICADOR:id
+
+    CORCHETE_IZQ
+    EXPRESION:f
+    CORCHETE_DER
+
+    CORCHETE_IZQ
+    EXPRESION:c
+    CORCHETE_DER
+
+    {: RESULT = new AccesoMatriz(id.toString(), f, c); :}
 ;

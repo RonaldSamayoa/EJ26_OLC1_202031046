@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.olc1.golite.ast.exp.AccesoMatriz;
 import com.olc1.golite.ast.exp.AccesoSlice;
 import com.olc1.golite.ast.exp.Append;
 import com.olc1.golite.ast.exp.Expresion;
@@ -505,6 +506,10 @@ public class InterpreterVisitor {
             return evaluarMatriz(m);
         }
 
+        if (exp instanceof AccesoMatriz a) {
+            return evaluarAccesoMatriz(a);
+        }
+
         return null;
     }
 
@@ -752,12 +757,10 @@ public class InterpreterVisitor {
         }
 
         StringBuilder resultado = new StringBuilder();
-
         for (int i = 0; i < lista.size(); i++) {
             if (!(lista.get(i) instanceof String)) {
                 throw new RuntimeException("strings.Join solo acepta []string");
             }
-
             resultado.append(lista.get(i));
 
             if (i < lista.size() - 1) {
@@ -773,7 +776,38 @@ public class InterpreterVisitor {
         for (SliceLiteral fila : matriz.getFilas()) {
             resultado.add(evaluarSliceLiteral(fila));
         }
-
         return resultado;
+    }
+
+    private Object evaluarAccesoMatriz( AccesoMatriz acceso) {
+        ValueWrapper wrapper =  entorno.obtener( acceso.getIdentificador());
+
+        if (wrapper == null) {
+            throw new RuntimeException( "Variable no definida: "  + acceso.getIdentificador());
+        }
+
+        if (!(wrapper.getValor() instanceof List<?> filas)) {
+
+            throw new RuntimeException(acceso.getIdentificador() + " no es una matriz");
+        }
+
+        int fila = ((Number)evaluar(acceso.getFila())).intValue();
+
+        if (fila < 0 || fila >= filas.size()) {
+            throw new RuntimeException("Indice de fila fuera de rango");
+        }
+
+        Object filaObj = filas.get(fila);
+
+        if (!(filaObj instanceof List<?> columnas)) {
+            throw new RuntimeException( "Fila invalida");
+        }
+
+        int columna = ((Number)evaluar( acceso.getColumna())).intValue();
+
+        if (columna < 0 || columna >= columnas.size()) {
+            throw new RuntimeException("Indice de columna fuera de rango");
+        }
+        return columnas.get(columna);
     }
 }
