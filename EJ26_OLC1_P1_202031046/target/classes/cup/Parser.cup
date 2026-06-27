@@ -35,6 +35,9 @@ import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 import com.olc1.golite.ast.stm.Parametro;
 import com.olc1.golite.ast.stm.Switch;
 import com.olc1.golite.ast.stm.CaseSwitch;
+import com.olc1.golite.ast.stm.AsignacionMatriz;
+import com.olc1.golite.ast.stm.AtributoStruct;
+import com.olc1.golite.ast.stm.Struct;
 
 parser code {:
 
@@ -148,6 +151,7 @@ terminal SLICES;
 terminal INDEX;
 terminal STRINGS;
 terminal JOIN;
+terminal STRUCT;
 
 non terminal List INICIO;
 non terminal List LISTA_SENTENCIAS;
@@ -192,6 +196,10 @@ non terminal MatrizLiteral MATRIZ_LITERAL;
 non terminal List<SliceLiteral> LISTA_FILAS;
 non terminal SliceLiteral FILA_MATRIZ;
 non terminal AccesoMatriz ACCESO_MATRIZ;
+non terminal AsignacionMatriz ASIGNACION_MATRIZ;
+non terminal Struct STRUCT_DECLARACION;
+non terminal AtributoStruct ATRIBUTO_STRUCT;
+non terminal List<AtributoStruct> LISTA_ATRIBUTOS;
 
 precedence left OR;
 precedence left AND;
@@ -234,6 +242,7 @@ LISTA_SENTENCIAS ::=
 SENTENCIA ::=
       DECLARACION:d      {: RESULT = d; :}
     | ASIGNACION:a       {: RESULT = a; :}
+    | ASIGNACION_MATRIZ:a {: RESULT = a; :}
     | PRINT:p            {: RESULT = p; :}
     | IF_SENTENCIA:i     {: RESULT = i; :}
     | FOR_SENTENCIA:f    {: RESULT = f; :}
@@ -246,6 +255,7 @@ SENTENCIA ::=
     | DECREMENTO_SENTENCIA:d {: RESULT = d; :}
     | LLAMADA_FUNCION_STMT:l {: RESULT = l; :}
     | SWITCH_SENTENCIA:s {: RESULT = s; :}
+    | STRUCT_DECLARACION:s {: RESULT = s; :}
 
     | error PUNTO_COMA
     | error LLAVE_DER
@@ -802,4 +812,63 @@ ACCESO_MATRIZ ::=
     CORCHETE_DER
 
     {: RESULT = new AccesoMatriz(id.toString(), f, c); :}
+;
+
+ASIGNACION_MATRIZ ::=
+    IDENTIFICADOR:id
+
+    CORCHETE_IZQ
+    EXPRESION:f
+    CORCHETE_DER
+
+    CORCHETE_IZQ
+    EXPRESION:c
+    CORCHETE_DER
+
+    IGUAL
+
+    EXPRESION:v
+
+    {: RESULT = new AsignacionMatriz(id.toString(), f, c, v); :}
+;
+
+ATRIBUTO_STRUCT ::=
+      TIPO:t
+      IDENTIFICADOR:id
+      PUNTO_COMA_OPCIONAL
+
+      {: RESULT = new AtributoStruct(id.toString(), t.toString()); :}
+;
+
+LISTA_ATRIBUTOS ::=
+      ATRIBUTO_STRUCT:a
+
+      {: List<AtributoStruct> lista =  new ArrayList<>();
+          lista.add(a);
+          RESULT = lista;
+      :}
+
+    | LISTA_ATRIBUTOS:l
+      ATRIBUTO_STRUCT:a
+
+      {: l.add(a);
+          RESULT = l;
+      :}
+;
+
+STRUCT_DECLARACION ::=
+      STRUCT
+      IDENTIFICADOR:id
+      LLAVE_IZQ
+      LISTA_ATRIBUTOS:l
+      LLAVE_DER
+
+      {: RESULT = new Struct( id.toString(), l);  :}
+
+      | STRUCT
+    IDENTIFICADOR:id
+    LLAVE_IZQ
+    LLAVE_DER
+
+    {:  RESULT = new Struct(id.toString(), new ArrayList<AtributoStruct>()); :}
 ;

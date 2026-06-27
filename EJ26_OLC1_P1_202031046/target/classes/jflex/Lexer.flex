@@ -80,6 +80,7 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "Index"               { return token(TipoToken.INDEX, yytext()); }
 "strings"             { return token(TipoToken.STRINGS, yytext()); }
 "Join"                { return token(TipoToken.JOIN, yytext());}
+"struct"              { return token(TipoToken.STRUCT, yytext()); }
 
 /*OPERADORES COMPUESTOS*/
 "++"                   {return token(TipoToken.INCREMENTO, yytext());}

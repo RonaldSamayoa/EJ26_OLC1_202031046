@@ -99,6 +99,7 @@ public enum TipoToken {
     INDEX,
     STRINGS,
     JOIN,
+    STRUCT,
 
     //especiales
     EOF,

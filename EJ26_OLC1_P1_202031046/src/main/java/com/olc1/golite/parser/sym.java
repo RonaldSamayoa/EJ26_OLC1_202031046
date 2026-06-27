@@ -72,6 +72,7 @@ public interface sym {
   public static final int FMT = 36;
   public static final int MENOR_IGUAL = 24;
   public static final int FALSE = 55;
+  public static final int STRUCT = 69;
   public static final int MENOS_IGUAL = 28;
   public static final int DIVISION = 19;
   public static final int VAR = 2;
@@ -146,7 +147,8 @@ public interface sym {
   "SLICES",
   "INDEX",
   "STRINGS",
-  "JOIN"
+  "JOIN",
+  "STRUCT"
   };
 }
 

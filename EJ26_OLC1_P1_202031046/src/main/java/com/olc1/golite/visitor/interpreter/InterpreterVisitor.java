@@ -22,6 +22,8 @@ import com.olc1.golite.ast.exp.SliceIndex;
 import com.olc1.golite.ast.exp.SliceLiteral;
 import com.olc1.golite.ast.exp.StringsJoin;
 import com.olc1.golite.ast.stm.Asignacion;
+import com.olc1.golite.ast.stm.AsignacionMatriz;
+import com.olc1.golite.ast.stm.AtributoStruct;
 import com.olc1.golite.ast.stm.Bloque;
 import com.olc1.golite.ast.stm.Break;
 import com.olc1.golite.ast.stm.CaseSwitch;
@@ -37,6 +39,7 @@ import com.olc1.golite.ast.stm.LlamadaFuncionStmt;
 import com.olc1.golite.ast.stm.Parametro;
 import com.olc1.golite.ast.stm.Print;
 import com.olc1.golite.ast.stm.Return;
+import com.olc1.golite.ast.stm.Struct;
 import com.olc1.golite.ast.stm.Switch;
 import com.olc1.golite.ui.ConsolePanel;
 import com.olc1.golite.visitor.interpreter.environment.Entorno;
@@ -47,12 +50,14 @@ public class InterpreterVisitor {
     private Entorno entorno;
     private ConsolePanel consola;
     private Map<String, Funcion> funciones;
+    private Map<String, Struct> structs;
     private Set<String> variablesGlobales = new HashSet<>();
 
     public InterpreterVisitor(ConsolePanel consola) {
         this.consola = consola;
         this.entorno = new Entorno();
         this.funciones = new HashMap<>();
+        this.structs = new HashMap<>();
     }
 
     public void ejecutar(List<Instruccion> instrucciones) {
@@ -67,6 +72,36 @@ public class InterpreterVisitor {
         for (Instruccion ins : instrucciones) {
             if (!(ins instanceof Funcion)) {
                 validarFuncionesGlobales(ins);
+            }
+        }
+
+        for (Instruccion ins : instrucciones) {
+            if (ins instanceof Struct s) {
+
+                if (structs.containsKey(s.getNombre())) {
+                    throw new RuntimeException( "El struct ya existe: " + s.getNombre());
+                }
+
+                if (funciones.containsKey(s.getNombre())) {
+                    throw new RuntimeException( "Ya existe una funcion llamada " + s.getNombre());
+                }
+
+                if (variablesGlobales.contains(s.getNombre())) {
+                    throw new RuntimeException(  "Ya existe una variable llamada " + s.getNombre());
+                }
+
+                if (s.getAtributos().isEmpty()) {
+                    throw new RuntimeException("El struct " + s.getNombre() + " debe tener al menos un atributo");
+                }
+
+                HashSet<String> nombres = new HashSet<>();
+
+                for (AtributoStruct a : s.getAtributos()) {
+                    if (!nombres.add(a.getNombre())) {
+                        throw new RuntimeException("Atributo repetido: " + a.getNombre()  + " en struct " + s.getNombre());
+                    }
+                }
+                structs.put(s.getNombre(), s);
             }
         }
 
@@ -160,6 +195,10 @@ public class InterpreterVisitor {
             if (ins instanceof For f) {
                 validarFuncionesDentroDeFuncion(f.getBloque());
             }
+
+            if (ins instanceof Struct) {
+                throw new RuntimeException("Los structs solo pueden declararse en el ambito global");
+            }
         }
     }
 
@@ -228,8 +267,17 @@ public class InterpreterVisitor {
             return;
         }
 
+        if (ins instanceof AsignacionMatriz a) {
+            ejecutarAsignacionMatriz(a);
+            return;
+        }
+
         if (ins instanceof Switch s) {
             ejecutarSwitch(s);
+            return;
+        }
+
+        if (ins instanceof Struct s) {
             return;
         }
     }
@@ -809,5 +857,38 @@ public class InterpreterVisitor {
             throw new RuntimeException("Indice de columna fuera de rango");
         }
         return columnas.get(columna);
+    }
+
+    private void ejecutarAsignacionMatriz(AsignacionMatriz a) {
+        ValueWrapper wrapper = entorno.obtener(a.getIdentificador());
+
+        if (wrapper == null) {
+            throw new RuntimeException("Variable no definida: " + a.getIdentificador());
+        }
+
+        if (!(wrapper.getValor() instanceof List<?> filas)) {
+            throw new RuntimeException(a.getIdentificador()  + " no es una matriz");
+        }
+
+        int fila = ((Number)evaluar(a.getFila())).intValue();
+
+        if (fila < 0 || fila >= filas.size()) {
+            throw new RuntimeException( "Indice de fila fuera de rango");
+        }
+
+        Object filaObj = filas.get(fila);
+
+        if (!(filaObj instanceof List<?> columnas)) {
+            throw new RuntimeException( "Fila invalida");
+        }
+
+        int columna = ((Number)evaluar(a.getColumna())).intValue();
+
+        if (columna < 0 || columna >= columnas.size()) {
+            throw new RuntimeException("Indice de columna fuera de rango");
+        }
+
+        Object nuevoValor = evaluar(a.getValor());
+        ((List<Object>) columnas).set(columna, nuevoValor);
     }
 }

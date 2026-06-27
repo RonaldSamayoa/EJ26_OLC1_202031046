@@ -68,6 +68,7 @@ DECIMAL = {DIGITO}+"."{DIGITO}+
 "Index"     { return symbol(sym.INDEX); }
 "strings"   { return symbol(sym.STRINGS); }
 "Join"      {return symbol(sym.JOIN);}
+"struct"    { return symbol(sym.STRUCT); }
 
 "&&"       {return symbol(sym.AND);}
 "||"       {return symbol(sym.OR);}

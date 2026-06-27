@@ -16,6 +16,8 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/SliceLiteral.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/exp/StringsJoin.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Asignacion.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/AsignacionMatriz.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/AtributoStruct.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Bloque.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Break.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/CaseSwitch.java
@@ -31,6 +33,7 @@
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Parametro.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Print.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Return.java
+/home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Struct.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/ast/stm/Switch.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/errors/ErrorCompilador.java
 /home/ronald/Escritorio/Compi1_EDVJ26/EJ26_OLC1_P1_202031046/src/main/java/com/olc1/golite/lexer/AnalizadorLexico.java
