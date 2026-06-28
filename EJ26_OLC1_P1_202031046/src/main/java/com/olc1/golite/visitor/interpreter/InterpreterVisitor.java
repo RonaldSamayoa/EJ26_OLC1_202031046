@@ -41,6 +41,8 @@ import com.olc1.golite.ast.stm.Print;
 import com.olc1.golite.ast.stm.Return;
 import com.olc1.golite.ast.stm.Struct;
 import com.olc1.golite.ast.stm.Switch;
+import com.olc1.golite.reportes.Simbolo;
+import com.olc1.golite.reportes.TablaSimbolos;
 import com.olc1.golite.ui.ConsolePanel;
 import com.olc1.golite.visitor.interpreter.environment.Entorno;
 import com.olc1.golite.visitor.interpreter.value.ValueWrapper;
@@ -52,6 +54,47 @@ public class InterpreterVisitor {
     private Map<String, Funcion> funciones;
     private Map<String, Struct> structs;
     private Set<String> variablesGlobales = new HashSet<>();
+
+    private String obtenerAmbito() {
+        if(entorno.getAnterior()==null){
+            return "Global";
+        }
+    
+        return "Local";
+    }
+
+    private String obtenerTipo(Object valor){
+        if(valor==null){
+            return "nil";
+        }
+    
+        if(valor instanceof Integer){
+            return "int";
+        }
+    
+        if(valor instanceof Double){
+            return "float64";
+        }
+    
+        if(valor instanceof Boolean){
+            return "bool";
+        }
+    
+        if(valor instanceof Character){
+            return "rune";
+        }
+    
+        if(valor instanceof String){
+            return "string";
+        }
+    
+        if(valor instanceof java.util.List){
+            return "slice";
+        }
+    
+        return valor.getClass().getSimpleName();
+    
+    }
 
     public InterpreterVisitor(ConsolePanel consola) {
         this.consola = consola;
@@ -126,6 +169,8 @@ public class InterpreterVisitor {
                             + p.getNombre() + " en funcion " + f.getNombre());
                     }
                 }
+
+                TablaSimbolos.agregar(new Simbolo(  f.getNombre(), "Funcion", f.getTipoRetorno() == null ? "void" : f.getTipoRetorno(), "Global" ));
                 funciones.put(f.getNombre(), f);
             }
         }
@@ -293,6 +338,7 @@ public class InterpreterVisitor {
             throw new RuntimeException("Ya existe una funcion llamada "
                 + d.getIdentificador());
         }
+        TablaSimbolos.agregar(new Simbolo(d.getIdentificador(), "Variable", obtenerTipo(valor), obtenerAmbito() ));
 
         entorno.declarar(d.getIdentificador(), new ValueWrapper(valor));
     }

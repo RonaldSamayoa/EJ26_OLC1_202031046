@@ -21,11 +21,13 @@ import com.olc1.golite.errors.ErrorCompilador;
 import com.olc1.golite.lexer.AnalizadorLexico;
 import com.olc1.golite.lexer.Token;
 import com.olc1.golite.parser.AnalizadorSintactico;
+import com.olc1.golite.reportes.TablaSimbolos;
 import com.olc1.golite.visitor.interpreter.InterpreterVisitor;
 
 public class MainFrame extends JFrame {
     private List<Token> ultimoReporteTokens;
     private List<ErrorCompilador> ultimoReporteErrores;
+    private InterpreterVisitor ultimoInterpreter;
     private JTabbedPane tabbedEditor;
     private ConsolePanel consola;
     private int contadorArchivos = 1;
@@ -98,6 +100,8 @@ public class MainFrame extends JFrame {
         JMenuItem itemCerrar = new JMenuItem("Cerrar Pestaña");
         JMenuItem itemReporteTokens = new JMenuItem("Reporte de tokens");
         JMenuItem itemReporteErrores = new JMenuItem("Reporte de errores");
+        JMenuItem itemReporteSimbolos = new JMenuItem("Reporte de simbolos");
+
         
         JMenuItem itemProbar = new JMenuItem("Probar");
 
@@ -112,6 +116,7 @@ public class MainFrame extends JFrame {
 
         menuReportes.add(itemReporteTokens);
         menuReportes.add(itemReporteErrores);
+        menuReportes.add(itemReporteSimbolos);
 
         barra.add(menuArchivo);
         barra.add(menuEjecutar);
@@ -253,7 +258,8 @@ public class MainFrame extends JFrame {
         
             if (sintactico.getErrores().isEmpty()) {
                 InterpreterVisitor interpreter = new InterpreterVisitor(consola);
-            
+                ultimoInterpreter = interpreter;
+
                 consola.append("");
                 consola.append("==AST==");
             
@@ -332,6 +338,17 @@ public class MainFrame extends JFrame {
         
             FrameReporteErrores frame = new FrameReporteErrores(ultimoReporteErrores);
             frame.setVisible(true);
+        });
+
+        itemReporteSimbolos.addActionListener(e -> {
+            if (ultimoInterpreter == null) {
+                JOptionPane.showMessageDialog( this, "Primero ejecute un analisis");
+                return;
+            }
+        
+            FrameReporteSimbolos frame = new FrameReporteSimbolos(TablaSimbolos.getSimbolos());
+            frame.setVisible(true);
+        
         });
     }
 }

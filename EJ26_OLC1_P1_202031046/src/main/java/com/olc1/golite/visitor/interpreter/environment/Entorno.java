@@ -20,6 +20,10 @@ public class Entorno {
         this.anterior = anterior;
     }
 
+    public Entorno getAnterior() {
+        return anterior;
+    }
+
     public void declarar(String id, ValueWrapper valor) {
         variables.put(id, valor);
     }
